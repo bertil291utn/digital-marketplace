@@ -34,3 +34,7 @@ yarn-error.log*
 .vercel
 # secrets
 .secret
+#cache
+cache
+# artifacts
+artifacts
