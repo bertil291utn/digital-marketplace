@@ -1,17 +1,17 @@
 /* hardhat.config.js */
 require("@nomiclabs/hardhat-waffle")
-const fs = require('fs')
-const privateKey = fs.readFileSync(".secret").toString().trim() || "01234567890123456789"
+require('dotenv').config();
 
 module.exports = {
   defaultNetwork: "hardhat",
   networks: {
-    hardhat: {
-      chainId: 1337
-    },
+    // hardhat: {
+    //   chainId: 1337
+    // },
+    hardhat:{},
     mumbai: {
-      url: "https://rpc-mumbai.matic.today",
-      accounts: [privateKey]
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.PROJECT_ID}`,
+      accounts: [`0x${process.env.PRIVATE_WALLET_KEY}`]
     }
   },
   solidity: {
