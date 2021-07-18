@@ -10,7 +10,7 @@ module.exports = {
     // },
     hardhat:{},
     mumbai: {
-      url: `https://polygon-mumbai.infura.io/v3/${process.env.PROJECT_ID}`,
+      url: 'https://rpc-mumbai.maticvigil.com/',
       accounts: [`0x${process.env.PRIVATE_WALLET_KEY}`]
     }
   },
