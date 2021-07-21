@@ -1,6 +1,6 @@
 // contracts/Market.sol
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity ^0.8.3;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -92,6 +92,7 @@ contract NFTMarket is ReentrancyGuard {
 
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
+    console.log("price entered '%s' , and item price '%s'",msg.value,price);
     require(msg.value == price, "Please submit asked price to complete the purchase");
 
     idToMarketItem[itemId].seller.transfer(msg.value);
