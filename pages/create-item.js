@@ -33,7 +33,7 @@ export default function CreateItem() {
       setFileUrl(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    }
   }
   async function createMarket() {
     const { name, description, price } = formInput
@@ -49,13 +49,13 @@ export default function CreateItem() {
       createSale(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    }
   }
 
   async function createSale(url) {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)    
+    const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
 
     /* next, create the item */
@@ -80,7 +80,7 @@ export default function CreateItem() {
   return (
     <div className="flex justify-center">
       <div className="w-1/2 flex flex-col pb-12">
-        <input 
+        <input
           placeholder="Asset Name"
           className="mt-8 border rounded p-4"
           onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
@@ -101,11 +101,14 @@ export default function CreateItem() {
           className="my-4"
           onChange={onChange}
         />
-        {
-          fileUrl && (
-            <Image className="rounded mt-4" width="350" src={fileUrl} alt="nft to be minted" />
-          )
-        }
+        
+          {
+            fileUrl && (
+              <img className="rounded mt-4" src={fileUrl} alt="nft to be minted" layout="fill"
+              />
+            )
+          }
+        
         <button onClick={createMarket} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
           Create Digital Asset
         </button>

@@ -50,18 +50,18 @@ export default function CreatorDashboard() {
     const soldItems = items.filter(i => i.sold)
     setSold(soldItems)
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
   }
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets created</h1>)
   return (
     <div>
       <div className="p-4">
         <h2 className="text-2xl py-2">Items Created</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <Image src={nft.image} className="rounded" alt={'nft created '+i} />
+                  <img src={nft.image} className="rounded" alt={'nft created ' + i} />
                 <div className="p-4 bg-black">
                   <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
                 </div>
@@ -70,7 +70,7 @@ export default function CreatorDashboard() {
           }
         </div>
       </div>
-        <div className="px-4">
+      <div className="px-4">
         {
           Boolean(sold.length) && (
             <div>
@@ -79,7 +79,7 @@ export default function CreatorDashboard() {
                 {
                   sold.map((nft, i) => (
                     <div key={i} className="border shadow rounded-xl overflow-hidden">
-                      <Image src={nft.image} className="rounded" alt={'sold images nft '+i} />
+                        <img src={nft.image} className="rounded" alt={'sold images nft ' + i}/>
                       <div className="p-4 bg-black">
                         <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
                       </div>
@@ -90,7 +90,7 @@ export default function CreatorDashboard() {
             </div>
           )
         }
-        </div>
+      </div>
     </div>
   )
 }

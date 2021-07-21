@@ -19,10 +19,17 @@ export default function Home() {
     loadNFTs()
   }, [])
   async function loadNFTs() {
+    const web3Modal = new Web3Modal({
+    network: "mainnet",
+    cacheProvider: true,
+  })
     /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider()
+    // const provider = new ethers.providers.JsonRpcProvider()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
-    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider)
     const data = await marketContract.fetchMarketItems()
 
     /*
@@ -45,7 +52,7 @@ export default function Home() {
       return item
     }))
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
   }
   async function buyNft(nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
@@ -56,13 +63,13 @@ export default function Home() {
     const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
 
     /* user will be prompted to pay the asking proces to complete the transaction */
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
     const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, {
-      value: price
+      value: ethers.utils.parseUnits(nft.price.toString(), 'ether')
     })
     await transaction.wait()
     loadNFTs()
   }
+
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
   return (
     <div className="flex justify-center">
@@ -71,7 +78,7 @@ export default function Home() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <Image src={nft.image} alt={'nft item '+i} />
+                  <img src={nft.image} alt={'nft item ' + i} />
                 <div className="p-4">
                   <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
                   <div style={{ height: '70px', overflow: 'hidden' }}>
