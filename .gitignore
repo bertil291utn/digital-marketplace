@@ -41,3 +41,6 @@ artifacts
 
 #ENV
 .env
+
+.vscode
+config.js
