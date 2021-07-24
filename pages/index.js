@@ -20,15 +20,15 @@ export default function Home() {
   }, [])
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
-    network: "mainnet",
-    cacheProvider: true,
-  })
+      network: "mainnet",
+      cacheProvider: true,
+    })
     /* create a generic provider and query for unsold market items */
-    // const provider = new ethers.providers.JsonRpcProvider()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+    const provider = new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com/')
+    // const connection = await web3Modal.connect()
+    // const provider = new ethers.providers.Web3Provider(connection)
+    // const signer = provider.getSigner()
+    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
     const data = await marketContract.fetchMarketItems()
 
@@ -78,7 +78,7 @@ export default function Home() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
-                  <img src={nft.image} alt={'nft item ' + i} />
+                <img src={nft.image} alt={'nft item ' + i} />
                 <div className="p-4">
                   <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
                   <div style={{ height: '70px', overflow: 'hidden' }}>
