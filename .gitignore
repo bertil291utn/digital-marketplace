@@ -43,4 +43,4 @@ artifacts
 .env
 
 .vscode
-config.js
+#config.js
