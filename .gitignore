@@ -36,8 +36,6 @@ yarn-error.log*
 .secret
 #cache
 cache
-# artifacts
-artifacts
 
 #ENV
 .env
