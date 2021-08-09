@@ -33,7 +33,6 @@ export default function MyAssets() {
     const data = await marketContract.fetchMyNFTs()
 
     const items = await Promise.all(data.map(async i => {
-      console.log(i)
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
       const meta = await axios.get(tokenUri)
       let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
@@ -50,7 +49,6 @@ export default function MyAssets() {
     setLoadingState('loaded')
   }
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets owned</h1>)
-  console.log(nfts)
   return (
     <div className="flex justify-center">
       <div className="p-4">
