@@ -25,9 +25,6 @@ export default function Home() {
     const provider = new ethers.providers.JsonRpcProvider(
       'https://rpc-mumbai.maticvigil.com/'
     );
-    // const connection = await web3Modal.connect()
-    // const provider = new ethers.providers.Web3Provider(connection)
-    // const signer = provider.getSigner()
     const marketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,
