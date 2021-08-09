@@ -1,34 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Punk guitars NFT marketplace (Polygon TestNet)
 
-## Getting Started
+Buy and mint NFTs 
+A NFT marketplace for independent music artists. These are band logo items as an PNG image.
 
-First, run the development server:
+#### Live demo
 
-```bash
-npm run dev
-# or
-yarn dev
+[MARKETPLACE](https://digital-marketplace-inky.vercel.app/)
+
+
+
+![image](https://user-images.githubusercontent.com/24902525/128727835-d93ccc31-d960-4773-af8b-0f63851eeafe.png)
+
+### Built with
+- Next js
+- Tailwind CSS
+- Solidity
+- Hardhat
+- Ethers
+- Metamask wallet
+- Polygon (mumbai testnet)
+- Matic polygon faucet
+
+### Start
+
+1. Go to [demo](https://digital-marketplace-inky.vercel.app/)
+2. Download metamask [chrome extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) 
+3. Add a new RPC test net on your metamask wallet 
+```js
+
+
+  First, open MetaMask and click on Settings.
+
+  MetaMask settings
+
+  Next, click on Networks and then Add Network:
+
+  New Network
+
+  Here, we will add the following configurations for the Mumbai test network as listed here:
+
+  Network Name: Mumbai TestNet
+
+  New RPC URL: https://rpc-mumbai.maticvigil.com/
+  
+  Chain ID: 31337
+
+  Currency Symbol: Matic
+
+  Save this, then you should be able to switch to and use the new network!
+
+
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Ask from the [polygon faucet](https://faucet.matic.network/) some matic
+5. Start buying NFTS
