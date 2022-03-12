@@ -25,31 +25,7 @@ A NFT marketplace for independent music artists. These are band logo items as an
 
 1. Go to [demo](https://digital-marketplace-inky.vercel.app/)
 2. Download metamask [chrome extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) 
-3. Add a new RPC test net on your metamask wallet 
-```js
-
-
-  First, open MetaMask and click on Settings.
-
-  MetaMask settings
-
-  Next, click on Networks and then Add Network:
-
-  New Network
-
-  Here, we will add the following configurations for the Mumbai test network as listed here:
-
-  Network Name: Mumbai TestNet
-
-  New RPC URL: https://rpc-mumbai.maticvigil.com/
-  
-  Chain ID: 31337
-
-  Currency Symbol: Matic
-
-  Save this, then you should be able to switch to and use the new network!
-
-
-```
-4. Ask from the [polygon faucet](https://faucet.matic.network/) some matic
-5. Start buying NFTS
+3. Add a new RPC test net on your metamask wallet \
+Go to this page [mumbai testnet scan](https://mumbai.polygonscan.com/). At the right bottom section you'll see metamask icon `Add Mumbai Network`, click and connect with your wallet. All settings will be automatically set up
+5. Ask from the [polygon faucet](https://faucet.matic.network/) some matic
+6. Start buying NFTS
