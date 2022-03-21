@@ -1,8 +1,7 @@
 /* pages/_app.js */
 import Link from 'next/link';
 import { useState } from 'react';
-import 'tailwindcss/tailwind.css';
-import '../styles/globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function MyApp({ Component, pageProps }) {
   const initialState = {
@@ -11,11 +10,12 @@ function MyApp({ Component, pageProps }) {
     myAssets: false,
     dashboard: false,
   };
-  const [linkState, setLinkState] = useState({...initialState,home:true});
+  const [linkState, setLinkState] = useState({ ...initialState, home: true });
   return (
     <div>
       <nav className='border-b p-6'>
-        <p className='text-4xl font-bold'>Punk guitars marketplace</p>
+        logo
+        <p className='text-4xl font-bold'>Distro Fank</p>
         <div className='flex mt-4'>
           <Link href='/'>
             <a
@@ -24,12 +24,12 @@ function MyApp({ Component, pageProps }) {
                 linkState.home ? 'active-link' : ''
               }`}
             >
-            Home
+              Home
             </a>
           </Link>
           <Link href='/create-item'>
             <a
-              onClick={() => setLinkState({sell: true })}
+              onClick={() => setLinkState({ sell: true })}
               className={`mr-6 text-pink-500 ${
                 linkState.sell ? 'active-link' : ''
               }`}
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }) {
           </Link>
           <Link href='/creator-dashboard'>
             <a
-              onClick={() => setLinkState({dashboard: true })}
+              onClick={() => setLinkState({ dashboard: true })}
               className={`mr-6 text-pink-500 ${
                 linkState.dashboard ? 'active-link' : ''
               }`}
@@ -59,7 +59,9 @@ function MyApp({ Component, pageProps }) {
           </Link>
         </div>
       </nav>
-      <Component {...pageProps} />
+      <ChakraProvider>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </div>
   );
 }
