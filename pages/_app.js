@@ -1,7 +1,8 @@
 /* pages/_app.js */
 import Link from 'next/link';
 import { useState } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import 'tailwindcss/tailwind.css';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   const initialState = {
@@ -59,9 +60,7 @@ function MyApp({ Component, pageProps }) {
           </Link>
         </div>
       </nav>
-      <ChakraProvider>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <Component {...pageProps} />
     </div>
   );
 }
