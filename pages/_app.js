@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <div>
       <nav className='border-b p-6'>
-        logo
         <p className='text-4xl font-bold'>Distro Fank</p>
         <div className='flex mt-4'>
           <Link href='/'>

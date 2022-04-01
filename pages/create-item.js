@@ -21,6 +21,11 @@ export default function CreateItem() {
     name: '',
     description: '',
     supply: '',
+    tiers: {
+      general: { numeroTokens: 0, precio: 0 },
+      coleccionistas: { numeroTokens: 0, precio: 0 },
+      vip: { numeroTokens: 0, precio: 0 },
+    },
     // attributes:[{
     //   "trait_type":'',
     //   "value": ""
@@ -29,7 +34,7 @@ export default function CreateItem() {
   const router = useRouter();
 
   function onChangeCover(e) {
-    const preview=URL.createObjectURL(e.target.files[0])
+    const preview = URL.createObjectURL(e.target.files[0]);
     setFileCoverUrl(preview);
   }
 
@@ -114,6 +119,81 @@ export default function CreateItem() {
                 updateFormInput({ ...formInput, description: e.target.value })
               }
             />
+            <p className='my-5'>
+              La distribuci&oacute;n de NFTs se va a dar en 3 layers
+            </p>
+                  <input
+                    placeholder='Numero total de tokens'
+                    className='rounded '
+                    type='number'
+                    onChange={(e) =>
+                      updateFormInput({
+                        ...formInput,
+                        tiers: { general: { numeroTokens: e.target.value } },
+                      })
+                    }
+                  />
+                  <input
+                    placeholder='Porcentaje total para royalties'
+                    className='rounded '
+                    type='number'
+                    onChange={(e) =>
+                      updateFormInput({
+                        ...formInput,
+                        tiers: { general: { numeroTokens: e.target.value } },
+                      })
+                    }
+                  />
+            <ul>
+              <li className='my-3'>
+                PUBLICO GENERAL
+                <div className='my-4 pl-3'>
+                  <div className='my-4'>
+                  <input
+                    placeholder='Numero de tokens para este layer'
+                    className='rounded w-full'
+                    type='number'
+                    onChange={(e) =>
+                      updateFormInput({
+                        ...formInput,
+                        tiers: { general: { numeroTokens: e.target.value } },
+                      })
+                    }
+                  />
+                    <label
+                      htmlFor='price'
+                      className='block text-sm font-medium text-gray-700'
+                    >
+                      Price
+                    </label>
+                    <div className='mt-1 relative rounded-md shadow-sm'>
+                      <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                        <span className='text-gray-500 sm:text-sm'> $ </span>
+                      </div>
+                      <input
+                        type='number'
+                        name='price'
+                        id='price'
+                        className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-2 sm:text-sm border-gray-300 rounded-md'
+                        placeholder='Precio en USD por token'
+                        onChange={(e) =>
+                          updateFormInput({
+                            ...formInput,
+                            tiers: {
+                              general: { numeroTokens: e.target.value },
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                <p>Porcentaje en layer </p>
+                </div>
+              </li>
+              <li className='my-3'>COLECCIONISTA  <p>Porcentaje en layer </p></li>
+              <li className='my-3'>FAN BASE PREMIUM  <p>Porcentaje en layer </p></li>
+            </ul>
+            <p>Porcentaje total </p>
           </div>
           {/* <inputf */}
           <div className='w-full flex flex-col gap-5'>
@@ -137,16 +217,6 @@ export default function CreateItem() {
           </div>
           {/* upload mp3, this goes to centralized storage */}
         </div>
-        {/* {fileUrl && (
-          <Image
-            className='rounded mt-4'
-            src={fileUrl}
-            alt='nft to be minted'
-            layout='fill'
-            width={500}
-            height={500}
-          />
-        )} */}
         <div className='w-3/4 mx-auto my-10'>
           <button
             onClick={createMarket}

@@ -1,5 +1,5 @@
 /* pages/index.js */
-import { ethers } from 'ethers';
+import {  ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
@@ -9,6 +9,7 @@ import { nftaddress, nftmarketaddress } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
+import { contract } from '../utils/connection/third-web-conn';
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
@@ -21,9 +22,12 @@ export default function Home() {
       network: 'mainnet',
       cacheProvider: true,
     });
+
+    const nfts = await contract.getAll();
+console.log(nfts);
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider(
-      'https://rpc-mumbai.maticvigil.com/'
+      'https://matic-mumbai.chainstacklabs.com'
     );
     const marketContract = new ethers.Contract(
       nftmarketaddress,
@@ -86,7 +90,7 @@ export default function Home() {
           {nfts.map((nft, i) => (
             <div key={i} className='border shadow rounded-xl overflow-hidden'>
               <Image
-                src={nft.image} 
+                src={nft.image}
                 alt={'nft item ' + i}
                 width={500}
                 height={500}
