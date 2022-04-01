@@ -12,28 +12,40 @@ import { nftaddress, nftmarketaddress } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
+import Upload from '../components/upload';
 
 export default function CreateItem() {
-  const [fileUrl, setFileUrl] = useState(null);
+  const [fileCoverUrl, setFileCoverUrl] = useState();
+  const [fileMp3Name, setFileMp3Name] = useState();
   const [formInput, updateFormInput] = useState({
-    price: '',
     name: '',
     description: '',
+    supply: '',
+    // attributes:[{
+    //   "trait_type":'',
+    //   "value": ""
+    // }, ]
   });
   const router = useRouter();
 
-  async function onChange(e) {
-    const file = e.target.files[0];
-    try {
-      const added = await client.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
-      });
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setFileUrl(url);
-    } catch (error) {
-      console.log('Error uploading file: ', error);
-    }
+  function onChangeCover(e) {
+    const preview=URL.createObjectURL(e.target.files[0])
+    setFileCoverUrl(preview);
   }
+
+  function onChangeMp3(e) {
+    setFileMp3Name(e.target.files[0].name);
+  }
+  // console.log('e', e.target.files);
+  // const file = e.target.files[0];
+  // try {
+  //   const added = await client.add(file, {
+  //     progress: (prog) => console.log(`received: ${prog}`),
+  //   });
+  //   setFileUrl(added.path);
+  // } catch (error) {
+  //   console.log('Error uploading file: ', error);
+  // }
   async function createMarket() {
     const { name, description, price } = formInput;
     if (!name || !description || !price || !fileUrl) return;
@@ -41,7 +53,9 @@ export default function CreateItem() {
     const data = JSON.stringify({
       name,
       description,
-      image: fileUrl,
+      ipfs_image_url: `ipfs://${fileUrl}`,
+      image: `https://ipfs.infura.io/ipfs/${fileUrl}`,
+      external_url: 'https://www.distrofank.xyz',
     });
     try {
       const added = await client.add(data);
@@ -63,6 +77,7 @@ export default function CreateItem() {
     let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let transaction = await contract.createToken(url);
     let tx = await transaction.wait();
+    console.log('tx after mint', tx);
     let event = tx.events[0];
     let value = event.args[2];
     let tokenId = value.toNumber();
@@ -81,32 +96,48 @@ export default function CreateItem() {
   }
 
   return (
-    <div className='flex justify-center'>
-      <div className='w-1/2 flex flex-col pb-12'>
-        <input
-          placeholder='Asset Name'
-          className='mt-8 border rounded p-4'
-          onChange={(e) =>
-            updateFormInput({ ...formInput, name: e.target.value })
-          }
-        />
-        <textarea
-          placeholder='Asset Description'
-          className='mt-2 border rounded p-4'
-          onChange={(e) =>
-            updateFormInput({ ...formInput, description: e.target.value })
-          }
-        />
-        <input
-          placeholder='Asset Price in Eth'
-          className='mt-2 border rounded p-4'
-          onChange={(e) =>
-            updateFormInput({ ...formInput, price: e.target.value })
-          }
-        />
-        <input type='file' name='Asset' className='my-4' onChange={onChange} />
+    <div className='w-3/4 mx-auto my-10'>
+      <div className='pb-12'>
+        <div className='flex gap-8'>
+          <div className='w-full flex flex-col'>
+            <input
+              placeholder='Asset Name'
+              className='mt-8 border rounded p-4'
+              onChange={(e) =>
+                updateFormInput({ ...formInput, name: e.target.value })
+              }
+            />
+            <textarea
+              placeholder='Asset Description'
+              className='mt-2 border rounded p-4'
+              onChange={(e) =>
+                updateFormInput({ ...formInput, description: e.target.value })
+              }
+            />
+          </div>
+          {/* <inputf */}
+          <div className='w-full flex flex-col gap-5'>
+            <Upload
+              label='NFT cover'
+              primaryText='Upload File'
+              optionalTest='PNG, JPG, GIF up to 10MB'
+              id='cover'
+              src={fileCoverUrl}
+              onChange={onChangeCover}
+            />
 
-        {fileUrl && (
+            <Upload
+              label='Media file'
+              primaryText='Upload File'
+              optionalTest='MP3, WAV up to 10MB'
+              id='coverMp3'
+              src={fileMp3Name}
+              onChange={onChangeMp3}
+            />
+          </div>
+          {/* upload mp3, this goes to centralized storage */}
+        </div>
+        {/* {fileUrl && (
           <Image
             className='rounded mt-4'
             src={fileUrl}
@@ -115,14 +146,15 @@ export default function CreateItem() {
             width={500}
             height={500}
           />
-        )}
-
-        <button
-          onClick={createMarket}
-          className='font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg'
-        >
-          Create Digital Asset
-        </button>
+        )} */}
+        <div className='w-3/4 mx-auto my-10'>
+          <button
+            onClick={createMarket}
+            className='font-bold bg-pink-500 text-white rounded p-4 shadow-lg  w-full'
+          >
+            Mint and Sell
+          </button>
+        </div>
       </div>
     </div>
   );
