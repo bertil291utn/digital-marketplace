@@ -122,44 +122,44 @@ export default function CreateItem() {
             <p className='my-5'>
               La distribuci&oacute;n de NFTs se va a dar en 3 layers
             </p>
-                  <input
-                    placeholder='Numero total de tokens'
-                    className='rounded '
-                    type='number'
-                    onChange={(e) =>
-                      updateFormInput({
-                        ...formInput,
-                        tiers: { general: { numeroTokens: e.target.value } },
-                      })
-                    }
-                  />
-                  <input
-                    placeholder='Porcentaje total para royalties'
-                    className='rounded '
-                    type='number'
-                    onChange={(e) =>
-                      updateFormInput({
-                        ...formInput,
-                        tiers: { general: { numeroTokens: e.target.value } },
-                      })
-                    }
-                  />
+            <input
+              placeholder='Numero total de tokens'
+              className='rounded '
+              type='number'
+              onChange={(e) =>
+                updateFormInput({
+                  ...formInput,
+                  tiers: { general: { numeroTokens: e.target.value } },
+                })
+              }
+            />
+            <input
+              placeholder='Porcentaje total para royalties'
+              className='rounded '
+              type='number'
+              onChange={(e) =>
+                updateFormInput({
+                  ...formInput,
+                  tiers: { general: { numeroTokens: e.target.value } },
+                })
+              }
+            />
             <ul>
               <li className='my-3'>
                 PUBLICO GENERAL
                 <div className='my-4 pl-3'>
                   <div className='my-4'>
-                  <input
-                    placeholder='Numero de tokens para este layer'
-                    className='rounded w-full'
-                    type='number'
-                    onChange={(e) =>
-                      updateFormInput({
-                        ...formInput,
-                        tiers: { general: { numeroTokens: e.target.value } },
-                      })
-                    }
-                  />
+                    <input
+                      placeholder='Numero de tokens para este layer'
+                      className='rounded w-full'
+                      type='number'
+                      onChange={(e) =>
+                        updateFormInput({
+                          ...formInput,
+                          tiers: { general: { numeroTokens: e.target.value } },
+                        })
+                      }
+                    />
                     <label
                       htmlFor='price'
                       className='block text-sm font-medium text-gray-700'
@@ -187,11 +187,15 @@ export default function CreateItem() {
                       />
                     </div>
                   </div>
-                <p>Porcentaje en layer </p>
+                  <p>Porcentaje en layer </p>
                 </div>
               </li>
-              <li className='my-3'>COLECCIONISTA  <p>Porcentaje en layer </p></li>
-              <li className='my-3'>FAN BASE PREMIUM  <p>Porcentaje en layer </p></li>
+              <li className='my-3'>
+                COLECCIONISTA <p>Porcentaje en layer </p>
+              </li>
+              <li className='my-3'>
+                FAN BASE PREMIUM <p>Porcentaje en layer </p>
+              </li>
             </ul>
             <p>Porcentaje total </p>
           </div>

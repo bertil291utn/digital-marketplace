@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 export default function CreateItem() {
   const [fileCoverUrl, setFileCoverUrl] = useState();
@@ -19,22 +21,20 @@ export default function CreateItem() {
   return (
     <div className='w-3/4 mx-auto my-10'>
       <div className='pb-12'>
-        <div className='flex gap-5'>
-          <div className='w-1/2 flex flex-col'>
-            <>
-              <FloatingLabel
-                controlId='floatingInput'
-                label='Asset name'
-                className='mb-3'
-              >
-                <Form.Control type='text' />
-              </FloatingLabel>
-              <FloatingLabel controlId='floatingTextarea2' label='Description'>
-                <Form.Control as='textarea' style={{ height: '100px' }} />
-              </FloatingLabel>
-            </>
+        <div className='grid grid-cols-2 gap-5'>
+          <div>
+            <FloatingLabel
+              controlId='floatingInput'
+              label='Asset name'
+              className='mb-3'
+            >
+              <Form.Control type='text' />
+            </FloatingLabel>
+            <FloatingLabel controlId='floatingTextarea2' label='Description'>
+              <Form.Control as='textarea' style={{ height: '100px' }} />
+            </FloatingLabel>
           </div>
-          <div className='w-1/2'>
+          <div>
             <div>
               <span className=''>NFT Cover</span>
               <Form.Group controlId='nftCover' className='mb-3'>
@@ -90,6 +90,30 @@ export default function CreateItem() {
                 </div>
               </Form.Group>
             </div>
+          </div>
+        </div>
+
+        {/* token detailed info */}
+        <div>
+          <p className='my-5'>
+            La distribuci&oacute;n de NFTs se va a dar en 3 layers
+          </p>
+          <div className='grid grid-cols-2 gap-5'>
+            <FloatingLabel
+              controlId='tokenNumber'
+              label='Numero total de tokens'
+              className='mb-3'
+            >
+              <Form.Control type='number' />
+            </FloatingLabel>
+
+            <FloatingLabel
+              controlId='tokenNumber'
+              label='Porcentaje total en regalias (ex. 20%, 15%)'
+              className='mb-3'
+            >
+              <Form.Control type='number' />
+            </FloatingLabel>
           </div>
         </div>
       </div>
