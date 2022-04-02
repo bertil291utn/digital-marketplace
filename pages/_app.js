@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import 'tailwindcss/tailwind.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
