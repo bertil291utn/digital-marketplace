@@ -7,17 +7,16 @@ import FormControl from 'react-bootstrap/FormControl';
 
 export default function CreateItem() {
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  const [fileMp3Name, setFileMp3Name] = useState();
+  const [benefits, setBenefits] = useState(['🎫 VIP tickets']);
 
   function onChangeCover(e) {
     const preview = URL?.createObjectURL(e.target.files[0]);
     setFileCoverUrl(preview);
   }
 
-  function onChangeMp3(e) {
-    setFileMp3Name(e.target.files[0]?.name);
+  function handleChange(event) {
+    setBenefits(event.target.value.split('\n').filter((e) => e));
   }
-
   return (
     <div className='w-3/4 mx-auto my-10'>
       <div className='pb-12'>
@@ -31,7 +30,11 @@ export default function CreateItem() {
               <Form.Control type='text' />
             </FloatingLabel>
             <FloatingLabel controlId='floatingTextarea2' label='Description'>
-              <Form.Control as='textarea' style={{ height: '100px' }} />
+              <Form.Control
+                as='textarea'
+                style={{ height: '100px' }}
+                onChange={(event) => console.log()}
+              />
             </FloatingLabel>
           </div>
           <div>
@@ -65,30 +68,13 @@ export default function CreateItem() {
             </div>
             {/* 2 */}
             <div>
-              <span className=''>Media file</span>
-              <Form.Group controlId='mediaFile' className='mb-3'>
-                <Form.Label className='w-full'>
-                  {fileMp3Name && (
-                    <div
-                      className='border border-gray-400 bg-gray-100 p-2 rounded-md cursor-pointer'
-                      title='Edit NFT cover'
-                    >
-                      {fileMp3Name}
-                    </div>
-                  )}
-                </Form.Label>
-                <Form.Control
-                  type='file'
-                  size='sm'
-                  onChange={onChangeMp3}
-                  hidden={fileMp3Name}
-                />
-                <div>
-                  <Form.Text className='text-muted'>
-                    MP3, WAV up to 10MB
-                  </Form.Text>
-                </div>
-              </Form.Group>
+              <FloatingLabel
+                controlId='floatingURL'
+                label='Streaming single/album URL'
+                className='mb-3'
+              >
+                <Form.Control type='text' />
+              </FloatingLabel>
             </div>
           </div>
         </div>
@@ -109,10 +95,19 @@ export default function CreateItem() {
 
             <FloatingLabel
               controlId='tokenNumber'
-              label='Porcentaje total en regalias (ex. 20%, 15%)'
+              label='Porcentaje total en regalias ex. 20%, 15%'
               className='mb-3'
             >
               <Form.Control type='number' />
+            </FloatingLabel>
+          </div>
+          <div className='my-4'>
+            <FloatingLabel controlId='allPerks' label='Describe all benefits'>
+              <Form.Control
+                as='textarea'
+                style={{ height: '150px' }}
+                onChange={handleChange}
+              />
             </FloatingLabel>
           </div>
 
@@ -137,7 +132,26 @@ export default function CreateItem() {
                       <Form.Control type='number' />
                     </FloatingLabel>
                   </div>
-                  <p>Porcentaje en layer </p>
+                  {benefits.map((b, index) => (
+                    <div key={index} className='flex gap-3 align-items-center'>
+                      <input
+                        className='h-4 w-4 cursor-pointer'
+                        type='checkbox'
+                        name={b.replaceAll(' ', '-')}
+                        id={`${b.replaceAll(' ', '-')}-${index + 1}`}
+                        onChange={(event) =>
+                          console.log('event checker', event.target.checked)
+                        }
+                      />
+                      <label
+                        className='cursor-pointer'
+                        htmlFor={`${b.replaceAll(' ', '-')}-${index + 1}`}
+                      >
+                        {b}
+                      </label>
+                    </div>
+                  ))}
+                  <p>Porcentaje de ownership en este layer </p>
                 </div>
               </li>
               <li className='my-3'>
