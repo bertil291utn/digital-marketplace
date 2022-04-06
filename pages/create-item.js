@@ -7,7 +7,8 @@ import FormControl from 'react-bootstrap/FormControl';
 
 export default function CreateItem() {
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  const [benefits, setBenefits] = useState(['🎫 VIP tickets']);
+  const [areaBenefits, setAreaBenefits] = useState('🎫 VIP tickets');
+  const [benefitsArray, setBenefitsArray] = useState([areaBenefits]);
 
   function onChangeCover(e) {
     const preview = URL?.createObjectURL(e.target.files[0]);
@@ -15,7 +16,8 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
-    setBenefits(event.target.value.split('\n').filter((e) => e));
+    setAreaBenefits(event.target.value)
+    setBenefitsArray(event.target.value.split('\n').filter((e) => e));
   }
   return (
     <div className='w-3/4 mx-auto my-10'>
@@ -29,7 +31,7 @@ export default function CreateItem() {
             >
               <Form.Control type='text' />
             </FloatingLabel>
-            <FloatingLabel controlId='floatingTextarea2' label='Description'>
+            <FloatingLabel controlId='floatingTextDescription' label='Description'>
               <Form.Control
                 as='textarea'
                 style={{ height: '100px' }}
@@ -107,6 +109,7 @@ export default function CreateItem() {
                 as='textarea'
                 style={{ height: '150px' }}
                 onChange={handleChange}
+                value={areaBenefits}
               />
             </FloatingLabel>
           </div>
@@ -132,7 +135,7 @@ export default function CreateItem() {
                       <Form.Control type='number' />
                     </FloatingLabel>
                   </div>
-                  {benefits.map((b, index) => (
+                  {benefitsArray.map((b, index) => (
                     <div key={index} className='flex gap-3 align-items-center'>
                       <input
                         className='h-4 w-4 cursor-pointer'
@@ -144,14 +147,14 @@ export default function CreateItem() {
                         }
                       />
                       <label
-                        className='cursor-pointer'
+                        className='cursor-pointer capitalize-first-letter'
                         htmlFor={`${b.replaceAll(' ', '-')}-${index + 1}`}
                       >
                         {b}
                       </label>
                     </div>
                   ))}
-                  <p>Porcentaje de ownership en este layer </p>
+                  <p className='my-4'>Porcentaje de ownership en este layer </p>
                 </div>
               </li>
               <li className='my-3'>
