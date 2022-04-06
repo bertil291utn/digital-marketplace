@@ -115,6 +115,40 @@ export default function CreateItem() {
               <Form.Control type='number' />
             </FloatingLabel>
           </div>
+
+          <div className='my-4'>
+            <ul>
+              <li className='my-3'>
+                PUBLICO GENERAL
+                <div className='my-4 pl-3'>
+                  <div className='my-4 grid grid-cols-2 gap-5'>
+                    <FloatingLabel
+                      controlId='tokenLayer1'
+                      label='Numero de tokens'
+                      className='mb-3 col-s'
+                    >
+                      <Form.Control type='number' />
+                    </FloatingLabel>
+                    <FloatingLabel
+                      controlId='tokenLayer1'
+                      label='Precio en USD por token ex. $99'
+                      className='mb-3'
+                    >
+                      <Form.Control type='number' />
+                    </FloatingLabel>
+                  </div>
+                  <p>Porcentaje en layer </p>
+                </div>
+              </li>
+              <li className='my-3'>
+                COLECCIONISTA <p>Porcentaje en layer </p>
+              </li>
+              <li className='my-3'>
+                FAN BASE PREMIUM <p>Porcentaje en layer </p>
+              </li>
+            </ul>
+            <p>Porcentaje total </p>
+          </div>
         </div>
       </div>
     </div>
