@@ -2,8 +2,7 @@
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
+import Benefits from '../components/create-item/Benefits.component';
 
 export default function CreateItem() {
   const [fileCoverUrl, setFileCoverUrl] = useState();
@@ -16,7 +15,7 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
-    setAreaBenefits(event.target.value)
+    setAreaBenefits(event.target.value);
     setBenefitsArray(event.target.value.split('\n').filter((e) => e));
   }
   return (
@@ -31,7 +30,10 @@ export default function CreateItem() {
             >
               <Form.Control type='text' />
             </FloatingLabel>
-            <FloatingLabel controlId='floatingTextDescription' label='Description'>
+            <FloatingLabel
+              controlId='floatingTextDescription'
+              label='Description'
+            >
               <Form.Control
                 as='textarea'
                 style={{ height: '100px' }}
@@ -97,7 +99,7 @@ export default function CreateItem() {
 
             <FloatingLabel
               controlId='tokenNumber'
-              label='Porcentaje total en regalias ex. 20%, 15%'
+              label='Porcentaje a ceder para regalias ex. 20%'
               className='mb-3'
             >
               <Form.Control type='number' />
@@ -116,52 +118,20 @@ export default function CreateItem() {
 
           <div className='my-4'>
             <ul>
-              <li className='my-3'>
-                PUBLICO GENERAL
-                <div className='my-4 pl-3'>
-                  <div className='my-4 grid grid-cols-2 gap-5'>
-                    <FloatingLabel
-                      controlId='tokenLayer1'
-                      label='Numero de tokens'
-                      className='mb-3 col-s'
-                    >
-                      <Form.Control type='number' />
-                    </FloatingLabel>
-                    <FloatingLabel
-                      controlId='tokenLayer1'
-                      label='Precio en USD por token ex. $99'
-                      className='mb-3'
-                    >
-                      <Form.Control type='number' />
-                    </FloatingLabel>
-                  </div>
-                  {benefitsArray.map((b, index) => (
-                    <div key={index} className='flex gap-3 align-items-center'>
-                      <input
-                        className='h-4 w-4 cursor-pointer'
-                        type='checkbox'
-                        name={b.replaceAll(' ', '-')}
-                        id={`${b.replaceAll(' ', '-')}-${index + 1}`}
-                        onChange={(event) =>
-                          console.log('event checker', event.target.checked)
-                        }
-                      />
-                      <label
-                        className='cursor-pointer capitalize-first-letter'
-                        htmlFor={`${b.replaceAll(' ', '-')}-${index + 1}`}
-                      >
-                        {b}
-                      </label>
-                    </div>
-                  ))}
-                  <p className='my-4'>Porcentaje de ownership en este layer </p>
-                </div>
+              <li className='my-5'>
+                <Benefits
+                  title='publico general'
+                  benefitsArray={benefitsArray}
+                />
               </li>
-              <li className='my-3'>
-                COLECCIONISTA <p>Porcentaje en layer </p>
+              <li className='my-5'>
+                <Benefits title='coleccionista' benefitsArray={benefitsArray} />
               </li>
-              <li className='my-3'>
-                FAN BASE PREMIUM <p>Porcentaje en layer </p>
+              <li className='my-5'>
+                <Benefits
+                  title='fan base premium'
+                  benefitsArray={benefitsArray}
+                />
               </li>
             </ul>
             <p>Porcentaje total </p>
