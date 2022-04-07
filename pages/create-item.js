@@ -8,6 +8,7 @@ import { useGlobalContext } from '../providers/GlobalProviders';
 export default function CreateItem() {
   const { updateTotalTokens, updateTotalRoyalties } = useGlobalContext();
   const [fileCoverUrl, setFileCoverUrl] = useState();
+  //TODO: add like a stepper to add mandatory step (total tokens and royalties) to move on to layers 
   const [formValues, setFormValues] = useState({
     NFTName: '',
     description: '',
@@ -112,34 +113,34 @@ export default function CreateItem() {
 
         {/* token detailed info */}
         <div>
-          <p className='my-5'>
-            La distribuci&oacute;n de NFTs se va a dar en 3 layers
-          </p>
           <div className='grid grid-cols-2 gap-5'>
-            <FloatingLabel
-              controlId='tokenNumber'
-              label='Numero total de tokens'
-              className='mb-3'
-            >
-              <Form.Control
-                type='number'
-                onChange={handleChange}
-                name='noTotalTokens'
-              />
-            </FloatingLabel>
+            <div>
+              <FloatingLabel
+                controlId='tokenNumber'
+                label='Numero total de tokens a mintear'
+                className='mb-3'
+              >
+                <Form.Control
+                  type='number'
+                  onChange={handleChange}
+                  name='noTotalTokens'
+                />
+              </FloatingLabel>
 
-            <FloatingLabel
-              controlId='tokenNumber'
-              label='Porcentaje a ceder para regalias ex. 20%'
-              className='mb-3'
-            >
-              <Form.Control
-                type='number'
-                onChange={handleChange}
-                name='percentageTokens'
-              />
-            </FloatingLabel>
+              <FloatingLabel
+                controlId='tokenNumber'
+                label='Porcentaje a ceder para regalias ex. 20%'
+                className='mb-3'
+              >
+                <Form.Control
+                  type='number'
+                  onChange={handleChange}
+                  name='percentageTokens'
+                />
+              </FloatingLabel>
+            </div>
           </div>
+
           <div className='my-4'>
             <FloatingLabel controlId='allPerks' label='Describe all benefits'>
               <Form.Control
@@ -151,6 +152,9 @@ export default function CreateItem() {
               />
             </FloatingLabel>
           </div>
+          <p className='my-5'>
+            La distribuci&oacute;n de NFTs se va a dar en 3 layers
+          </p>
 
           <div className='my-4'>
             <ul>

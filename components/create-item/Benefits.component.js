@@ -7,6 +7,8 @@ const Benefits = ({ title, benefitsArray }) => {
   const { totalTokens, totalRoyalties } = useGlobalContext();
   console.log('totalTokens', totalTokens);
   console.log('totalRoyalties', totalRoyalties);
+  //TODO: make total percentage royalties math operation for an specific layer using total(token and percentage) variables
+  //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs 
 
   const [totalPercentage, setTotalPercentage] = useState();
   const benefitsGroupName = title.toLowerCase().replace(' ', '-');
