@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { useGlobalContext } from '../../providers/GlobalProviders';
 
 const Benefits = ({ title, benefitsArray }) => {
-  const [totalPercentage, setTotalPercentage] = useState(0)
+  const { totalTokens, totalRoyalties } = useGlobalContext();
+  console.log('totalTokens', totalTokens);
+  console.log('totalRoyalties', totalRoyalties);
+
+  const [totalPercentage, setTotalPercentage] = useState();
   const benefitsGroupName = title.toLowerCase().replace(' ', '-');
   return (
     <>
@@ -25,7 +30,9 @@ const Benefits = ({ title, benefitsArray }) => {
             <Form.Control type='number' />
           </FloatingLabel>
         </div>
-        <span className='block my-3 text-muted'>Seleccione los beneficios para este layer</span>
+        <span className='block my-3 text-muted'>
+          Seleccione los beneficios para este layer
+        </span>
         {benefitsArray.map((b, index) => (
           <div key={index} className='flex gap-3 align-items-center'>
             <input
@@ -47,7 +54,11 @@ const Benefits = ({ title, benefitsArray }) => {
             </label>
           </div>
         ))}
-        <p className='my-4'>{totalPercentage} Porcentaje de ownership en este layer </p>
+        {totalPercentage && (
+          <p className='my-4'>
+            {`${totalPercentage} Porcentaje de ownership en este layer`}
+          </p>
+        )}
       </div>
     </>
   );

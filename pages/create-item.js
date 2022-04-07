@@ -3,11 +3,20 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Benefits from '../components/create-item/Benefits.component';
+import { useGlobalContext } from '../providers/GlobalProviders';
 
 export default function CreateItem() {
+  const { updateTotalTokens, updateTotalRoyalties } = useGlobalContext();
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  const [areaBenefits, setAreaBenefits] = useState('🎫 VIP tickets');
-  const [benefitsArray, setBenefitsArray] = useState([areaBenefits]);
+  const [formValues, setFormValues] = useState({
+    NFTName: '',
+    description: '',
+    streamingUrl: '',
+    noTotalTokens: '',
+    percentageTokens: '',
+    benefits: '🎫 VIP tickets',
+  });
+  const [benefitsArray, setBenefitsArray] = useState([formValues.benefits]);
 
   function onChangeCover(e) {
     const preview = URL?.createObjectURL(e.target.files[0]);
@@ -15,9 +24,18 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
-    setAreaBenefits(event.target.value);
-    setBenefitsArray(event.target.value.split('\n').filter((e) => e));
+    setFormValues((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+    event.target.name === 'benefits' &&
+      setBenefitsArray(event.target.value.split('\n').filter((e) => e));
+    event.target.name === 'noTotalTokens' &&
+      updateTotalTokens(event.target.value);
+    event.target.name === 'percentageTokens' &&
+      updateTotalRoyalties(event.target.value);
   }
+  console.log('form', formValues);
   return (
     <div className='w-3/4 mx-auto my-10'>
       <div className='pb-12'>
@@ -28,7 +46,11 @@ export default function CreateItem() {
               label='Asset name'
               className='mb-3'
             >
-              <Form.Control type='text' />
+              <Form.Control
+                type='text'
+                name='NFTName'
+                onChange={handleChange}
+              />
             </FloatingLabel>
             <FloatingLabel
               controlId='floatingTextDescription'
@@ -37,7 +59,8 @@ export default function CreateItem() {
               <Form.Control
                 as='textarea'
                 style={{ height: '100px' }}
-                onChange={(event) => console.log()}
+                onChange={handleChange}
+                name='description'
               />
             </FloatingLabel>
           </div>
@@ -77,7 +100,11 @@ export default function CreateItem() {
                 label='Streaming single/album URL'
                 className='mb-3'
               >
-                <Form.Control type='text' />
+                <Form.Control
+                  type='text'
+                  name='streamingUrl'
+                  onChange={handleChange}
+                />
               </FloatingLabel>
             </div>
           </div>
@@ -94,7 +121,11 @@ export default function CreateItem() {
               label='Numero total de tokens'
               className='mb-3'
             >
-              <Form.Control type='number' />
+              <Form.Control
+                type='number'
+                onChange={handleChange}
+                name='noTotalTokens'
+              />
             </FloatingLabel>
 
             <FloatingLabel
@@ -102,7 +133,11 @@ export default function CreateItem() {
               label='Porcentaje a ceder para regalias ex. 20%'
               className='mb-3'
             >
-              <Form.Control type='number' />
+              <Form.Control
+                type='number'
+                onChange={handleChange}
+                name='percentageTokens'
+              />
             </FloatingLabel>
           </div>
           <div className='my-4'>
@@ -111,7 +146,8 @@ export default function CreateItem() {
                 as='textarea'
                 style={{ height: '150px' }}
                 onChange={handleChange}
-                value={areaBenefits}
+                value={formValues.benefits}
+                name='benefits'
               />
             </FloatingLabel>
           </div>
