@@ -4,11 +4,14 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
+import { layerModel } from '../providers/layerModel';
 
 export default function CreateItem() {
-  const { updateTotalTokens, updateTotalRoyalties } = useGlobalContext();
+  const { updateTotalTokens, updateTotalRoyalties,layerVariables } = useGlobalContext();
+  console.log('layerVariables',layerVariables)
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  //TODO: add like a stepper to add mandatory step (total tokens and royalties) to move on to layers 
+  //TODO: add like a stepper to add mandatory step (total tokens and royalties) to move on to layers
+  //next version, on improvement ui
   const [formValues, setFormValues] = useState({
     NFTName: '',
     description: '',
@@ -152,30 +155,37 @@ export default function CreateItem() {
               />
             </FloatingLabel>
           </div>
-          <p className='my-5'>
-            La distribuci&oacute;n de NFTs se va a dar en 3 layers
-          </p>
+          {formValues.noTotalTokens && formValues.percentageTokens && (
+            <>
+              <p className='my-5'>
+                La distribuci&oacute;n de NFTs se va a dar en 3 layers
+              </p>
 
-          <div className='my-4'>
-            <ul>
-              <li className='my-5'>
-                <Benefits
-                  title='publico general'
-                  benefitsArray={benefitsArray}
-                />
-              </li>
-              <li className='my-5'>
-                <Benefits title='coleccionista' benefitsArray={benefitsArray} />
-              </li>
-              <li className='my-5'>
-                <Benefits
-                  title='fan base premium'
-                  benefitsArray={benefitsArray}
-                />
-              </li>
-            </ul>
-            <p>Porcentaje total </p>
-          </div>
+              <div className='my-4'>
+                <ul>
+                  <li className='my-5'>
+                    <Benefits
+                      title={layerModel.GENERAL}
+                      benefitsArray={benefitsArray}
+                    />
+                  </li>
+                  <li className='my-5'>
+                    <Benefits
+                      title={layerModel.COLLECTOR}
+                      benefitsArray={benefitsArray}
+                    />
+                  </li>
+                  <li className='my-5'>
+                    <Benefits
+                      title={layerModel.PREMIUM}
+                      benefitsArray={benefitsArray}
+                    />
+                  </li>
+                </ul>
+                <p>Porcentaje total </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

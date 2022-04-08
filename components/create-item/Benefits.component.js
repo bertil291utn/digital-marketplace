@@ -2,13 +2,21 @@ import { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useGlobalContext } from '../../providers/GlobalProviders';
+import styles from './Benefits.component.module.scss';
+import { layerTypeModel } from '../../providers/layerModel';
 
 const Benefits = ({ title, benefitsArray }) => {
-  const { totalTokens, totalRoyalties } = useGlobalContext();
+  const { totalTokens, totalRoyalties, updateLayerVariables, layerVariables } =
+    useGlobalContext();
+  const [error, setError] = useState();
   console.log('totalTokens', totalTokens);
   console.log('totalRoyalties', totalRoyalties);
   //TODO: make total percentage royalties math operation for an specific layer using total(token and percentage) variables
-  //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs 
+  //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs
+  const handleChange = (e) => {
+    updateLayerVariables(benefitsGroupName, e.target.name, e.target.value);
+    // setError('Error Message')
+  };
 
   const [totalPercentage, setTotalPercentage] = useState();
   const benefitsGroupName = title.toLowerCase().replace(' ', '-');
@@ -22,14 +30,29 @@ const Benefits = ({ title, benefitsArray }) => {
             label='Numero de tokens'
             className='mb-3 col-s'
           >
-            <Form.Control type='number' />
+            <Form.Control
+              type='number'
+              aria-describedby={`numeroTokens-${benefitsGroupName}-numBlock`}
+              className={error && styles['error-input-border']}
+              onChange={handleChange}
+              name={layerTypeModel.NO_TOKENS}
+            />
+            {error && (
+              <Form.Text id={`numeroTokens-${benefitsGroupName}-numBlock`}>
+                <span className={'text-red-400'}>{error}</span>
+              </Form.Text>
+            )}
           </FloatingLabel>
           <FloatingLabel
             controlId={`precioToken-${benefitsGroupName}`}
             label='Precio en USD por token ex. $99'
             className='mb-3'
           >
-            <Form.Control type='number' />
+            <Form.Control
+              type='number'
+              onChange={handleChange}
+              name={layerTypeModel.PRICE}
+            />
           </FloatingLabel>
         </div>
         <span className='block my-3 text-muted'>
