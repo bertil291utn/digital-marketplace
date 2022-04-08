@@ -7,8 +7,9 @@ import { useGlobalContext } from '../providers/GlobalProviders';
 import { layerModel } from '../providers/layerModel';
 
 export default function CreateItem() {
-  const { updateTotalTokens, updateTotalRoyalties,layerVariables } = useGlobalContext();
-  console.log('layerVariables',layerVariables)
+  const { updateTotalTokens, updateTotalRoyalties, layerVariables } =
+    useGlobalContext();
+  console.log('layerVariables', layerVariables);
   const [fileCoverUrl, setFileCoverUrl] = useState();
   //TODO: add like a stepper to add mandatory step (total tokens and royalties) to move on to layers
   //next version, on improvement ui
@@ -163,24 +164,11 @@ export default function CreateItem() {
 
               <div className='my-4'>
                 <ul>
-                  <li className='my-5'>
-                    <Benefits
-                      title={layerModel.GENERAL}
-                      benefitsArray={benefitsArray}
-                    />
-                  </li>
-                  <li className='my-5'>
-                    <Benefits
-                      title={layerModel.COLLECTOR}
-                      benefitsArray={benefitsArray}
-                    />
-                  </li>
-                  <li className='my-5'>
-                    <Benefits
-                      title={layerModel.PREMIUM}
-                      benefitsArray={benefitsArray}
-                    />
-                  </li>
+                  {Object.keys(layerModel).map((_key) => (
+                    <li className='my-5' key={_key}>
+                      <Benefits type={_key} benefitsArray={benefitsArray} />
+                    </li>
+                  ))}
                 </ul>
                 <p>Porcentaje total </p>
               </div>

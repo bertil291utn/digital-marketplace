@@ -6,20 +6,18 @@ const GlobalContext = createContext();
 const GlobalProvider = ({ children }) => {
   const [totalTokens, setTotalTokens] = useState();
   const [totalRoyalties, setTotalRoyalties] = useState();
-  const [layerVariables, setLayerVariables] = useState({
-    [layerModel.GENERAL.toLowerCase().replace(' ', '-')]: {
-      [layerTypeModel.NO_TOKENS]: '',
-      [layerTypeModel.PRICE]: '',
-    },
-    [layerModel.COLLECTOR.toLowerCase().replace(' ', '-')]: {
-      [layerTypeModel.NO_TOKENS]: '',
-      [layerTypeModel.PRICE]: '',
-    },
-    [layerModel.PREMIUM.toLowerCase().replace(' ', '-')]: {
-      [layerTypeModel.NO_TOKENS]: '',
-      [layerTypeModel.PRICE]: '',
-    },
-  });
+  const [layerVariables, setLayerVariables] = useState(() =>
+    Object.keys(layerModel).reduce(
+      (a, b) => ({
+        ...a,
+        [b]: {
+          [layerTypeModel.NO_TOKENS]: '',
+          [layerTypeModel.PRICE]: '',
+        },
+      }),
+      {}
+    )
+  );
 
   const updateTotalTokens = (payload) => {
     setTotalTokens(payload);
