@@ -11,8 +11,10 @@ export default function CreateItem() {
     useGlobalContext();
   console.log('layerVariables', layerVariables);
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  //TODO: add like a stepper to add mandatory step (total tokens and royalties) to move on to layers
-  //next version, on improvement ui
+  //TODO: UI improvement, add distribution same ad final user view, 
+  // left nft image, right description below url
+  //under layers as cards distribution
+  
   const [formValues, setFormValues] = useState({
     NFTName: '',
     description: '',
