@@ -6,38 +6,48 @@ import styles from './Benefits.component.module.scss';
 import { layerModel, layerTypeModel } from '../../providers/layerModel';
 
 const Benefits = ({ type, benefitsArray }) => {
-  const { totalTokens, totalRoyalties, updateLayerVariables } =
+  const { totalTokens, totalRoyalties, updateLayerVariables, layerVariables } =
     useGlobalContext();
+    
   const [error, setError] = useState();
   const [zeroError, setZeroError] = useState();
-  console.log('totalTokens', totalTokens);
-  console.log('totalRoyalties', totalRoyalties);
   //TODO: make total percentage royalties math operation for an specific layer using total(token and percentage) variables
   //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs
+  //TODO: work later on validations 
   const handleChange = (e) => {
-    if (!e.target.value) {
-      setError();
-      setZeroError();
-      return;
-    }
+    // const totalLeftTokens=
+    //   totalTokens -
+    //     Object.values(layerVariables)
+    //       .map((n) => +n.noTokens)
+    //       .filter((e) => e)
+    //       .reduce((a, b) => a + b, 0)
     
-    if (e.target.name === layerTypeModel.NO_TOKENS) {
-      setError();
-      !(+e.target.value > 0) &&
-      setError(`Tokens should be greater than zero`);
-      +e.target.value >= +totalTokens &&
-        setError(`Tokens should be less than ${totalTokens}`);
-      return;
-    }
-    if (e.target.name === layerTypeModel.PRICE) {
-      setZeroError();
-      !(+e.target.value > 0) &&
-      setZeroError(`Tokens should be greater than zero`);
-      return;
-    }
-
+    // setError();
+    // setZeroError();
+    // updateLayerVariables(type, e.target.name, '');
+    // if (!e.target.value){ 
+    //   updateLayerVariables(type, e.target.name, '');
+    //   return;
+    // }
+    
+    // if (!(+e.target.value > 0)) {
+    //   const setVar =
+    //   e.target.name === layerTypeModel.PRICE ? setZeroError : setError;
+    //   updateLayerVariables(type, e.target.name, '');
+    //   setVar(`Tokens should be greater than zero`);
+    //   return;
+    // }
+    // if (e.target.name === layerTypeModel.NO_TOKENS) {
+    //   if (+e.target.value > +totalLeftTokens) {
+    //     updateLayerVariables(type, e.target.name, '');
+    //     setError(`Tokens should be less than ${totalLeftTokens}`);
+    //     return;
+    //   }
+    // }
     updateLayerVariables(type, e.target.name, e.target.value);
   };
+
+  console.log('layerVariables', layerVariables);
 
   const [totalPercentage, setTotalPercentage] = useState();
   return (

@@ -9,7 +9,6 @@ import { layerModel } from '../providers/layerModel';
 export default function CreateItem() {
   const { updateTotalTokens, updateTotalRoyalties, layerVariables } =
     useGlobalContext();
-  console.log('layerVariables', layerVariables);
   const [fileCoverUrl, setFileCoverUrl] = useState();
   const [errorTotalTokens, setErrorTotalTokens] = useState();
   const [errorTotalPercentage, setErrorTotalPercentage] = useState();
@@ -33,20 +32,22 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
+    setErrorTotalPercentage();
+    setErrorTotalTokens();
     if (!event.target.value) {
-      setErrorTotalPercentage();
-      setErrorTotalTokens();
+      event.target.name === 'noTotalTokens' &&
+        updateTotalTokens(event.target.value);
+      event.target.name === 'percentageTokens' &&
+        updateTotalRoyalties(event.target.value);
       return;
     }
     if (event.target.name === 'noTotalTokens') {
-      setErrorTotalTokens();
       if (!(event.target.value > 0 && event.target.value <= 10_000)) {
         setErrorTotalTokens('Values between 1 and 10_000');
         return;
       }
     }
     if (event.target.name === 'percentageTokens') {
-      setErrorTotalPercentage();
       if (!(event.target.value > 0 && event.target.value <= 100)) {
         setErrorTotalPercentage('Values between 1 and 100');
         return;
