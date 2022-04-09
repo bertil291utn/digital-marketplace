@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Benefits from '../components/create-item/Benefits.component';
@@ -12,6 +12,7 @@ export default function CreateItem() {
   const [fileCoverUrl, setFileCoverUrl] = useState();
   const [errorTotalTokens, setErrorTotalTokens] = useState();
   const [errorTotalPercentage, setErrorTotalPercentage] = useState();
+  const formRef = useRef();
   //TODO: UI improvement, add distribution same ad final user view,
   // left nft image, right description below url
   //under layers as cards distribution
@@ -22,9 +23,15 @@ export default function CreateItem() {
     streamingUrl: '',
     noTotalTokens: '',
     percentageTokens: '',
-    benefits: '🎫 VIP tickets',
+    benefits: '',
   });
-  const [benefitsArray, setBenefitsArray] = useState([formValues.benefits]);
+  const [benefitsArray, setBenefitsArray] = useState([]);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    console.log('new formDATA', formData);
+  }
 
   function onChangeCover(e) {
     const preview = URL?.createObjectURL(e.target.files[0]);
@@ -58,14 +65,25 @@ export default function CreateItem() {
       ...prev,
       [event.target.name]: event.target.value,
     }));
-    event.target.name === 'benefits' &&
-      setBenefitsArray(event.target.value.split('\n').filter((e) => e));
+    if (event.target.name === 'benefits') {
+      const allBenefits = event.target.value.split('\n').filter((e) => e);
+      setBenefitsArray(allBenefits);
+      const _layerVariables = { ...layerVariables };
+      Object.keys(layerModel).map((val) => {
+        _layerVariables[val]['benefits'] = allBenefits.reduce(
+          (a, b) => ({
+            ...a,
+            [b.toLowerCase().replaceAll(' ', '-')]: false,
+          }),
+          {}
+        );
+      });
+    }
     event.target.name === 'noTotalTokens' &&
       updateTotalTokens(event.target.value);
     event.target.name === 'percentageTokens' &&
       updateTotalRoyalties(event.target.value);
   }
-  console.log('form', formValues);
 
   const validForm =
     !errorTotalTokens &&
@@ -217,14 +235,17 @@ export default function CreateItem() {
               </p>
 
               <div className='my-4'>
-                <ul>
-                  {Object.keys(layerModel).map((_key) => (
-                    <li className='my-5' key={_key}>
-                      <Benefits type={_key} benefitsArray={benefitsArray} />
-                    </li>
-                  ))}
-                </ul>
-                <p>Porcentaje total </p>
+                <form onSubmit={handleSubmit}>
+                  <ul>
+                    {Object.keys(layerModel).map((_key) => (
+                      <li className='my-5' key={_key}>
+                        <Benefits type={_key} benefitsArray={benefitsArray} />
+                      </li>
+                    ))}
+                  </ul>
+                  <p>Porcentaje total </p>
+                  <button type='submit'>Submit</button>
+                </form>
               </div>
             </>
           )}
