@@ -9,18 +9,34 @@ const Benefits = ({ type, benefitsArray }) => {
   const { totalTokens, totalRoyalties, updateLayerVariables } =
     useGlobalContext();
   const [error, setError] = useState();
+  const [zeroError, setZeroError] = useState();
   console.log('totalTokens', totalTokens);
   console.log('totalRoyalties', totalRoyalties);
   //TODO: make total percentage royalties math operation for an specific layer using total(token and percentage) variables
   //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs
   const handleChange = (e) => {
-    updateLayerVariables(type, e.target.name, e.target.value);
-
+    if (!e.target.value) {
+      setError();
+      setZeroError();
+      return;
+    }
+    
     if (e.target.name === layerTypeModel.NO_TOKENS) {
       setError();
+      !(+e.target.value > 0) &&
+      setError(`Tokens should be greater than zero`);
       +e.target.value >= +totalTokens &&
-        setError(`Tokens should be less than total amount ${totalTokens}`);
+        setError(`Tokens should be less than ${totalTokens}`);
+      return;
     }
+    if (e.target.name === layerTypeModel.PRICE) {
+      setZeroError();
+      !(+e.target.value > 0) &&
+      setZeroError(`Tokens should be greater than zero`);
+      return;
+    }
+
+    updateLayerVariables(type, e.target.name, e.target.value);
   };
 
   const [totalPercentage, setTotalPercentage] = useState();
@@ -58,7 +74,14 @@ const Benefits = ({ type, benefitsArray }) => {
               onChange={handleChange}
               name={layerTypeModel.PRICE}
               min='1'
+              aria-describedby={`precioToken-${type}-numBlock`}
+              className={zeroError ? 'error-input-border' : undefined}
             />
+            {zeroError && (
+              <Form.Text id={`precioToken-${type}-numBlock`}>
+                <span className={'text-red-400'}>{zeroError}</span>
+              </Form.Text>
+            )}
           </FloatingLabel>
         </div>
         <span className='block my-3 text-muted'>

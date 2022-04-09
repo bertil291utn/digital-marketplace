@@ -33,22 +33,21 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
+    if (!event.target.value) {
+      setErrorTotalPercentage();
+      setErrorTotalTokens();
+      return;
+    }
     if (event.target.name === 'noTotalTokens') {
       setErrorTotalTokens();
-      if (
-        event.target.value &&
-        !(event.target.value > 0 && event.target.value <= 10_000)
-      ) {
+      if (!(event.target.value > 0 && event.target.value <= 10_000)) {
         setErrorTotalTokens('Values between 1 and 10_000');
         return;
       }
     }
     if (event.target.name === 'percentageTokens') {
       setErrorTotalPercentage();
-      if (
-        event.target.value &&
-        !(event.target.value > 0 && event.target.value <= 100)
-      ) {
+      if (!(event.target.value > 0 && event.target.value <= 100)) {
         setErrorTotalPercentage('Values between 1 and 100');
         return;
       }
