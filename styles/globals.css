@@ -2,15 +2,19 @@
 @tailwind components;
 @tailwind utilities; */
 
-.active-link{
+.active-link {
   text-decoration: underline;
   font-weight: 700;
 }
 
-ul{
+ul {
   padding: unset;
 }
 
 .capitalize-first-letter:first-letter {
-  text-transform:uppercase;
- }
+  text-transform: uppercase;
+}
+
+.error-input-border {
+  border: 1px solid red;
+}

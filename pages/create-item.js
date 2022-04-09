@@ -11,10 +11,12 @@ export default function CreateItem() {
     useGlobalContext();
   console.log('layerVariables', layerVariables);
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  //TODO: UI improvement, add distribution same ad final user view, 
+  const [errorTotalTokens, setErrorTotalTokens] = useState();
+  const [errorTotalPercentage, setErrorTotalPercentage] = useState();
+  //TODO: UI improvement, add distribution same ad final user view,
   // left nft image, right description below url
   //under layers as cards distribution
-  
+
   const [formValues, setFormValues] = useState({
     NFTName: '',
     description: '',
@@ -31,6 +33,27 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
+    if (event.target.name === 'noTotalTokens') {
+      setErrorTotalTokens();
+      if (
+        event.target.value &&
+        !(event.target.value > 0 && event.target.value <= 10_000)
+      ) {
+        setErrorTotalTokens('Values between 1 and 10_000');
+        return;
+      }
+    }
+    if (event.target.name === 'percentageTokens') {
+      setErrorTotalPercentage();
+      if (
+        event.target.value &&
+        !(event.target.value > 0 && event.target.value <= 100)
+      ) {
+        setErrorTotalPercentage('Values between 1 and 100');
+        return;
+      }
+    }
+
     setFormValues((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -43,6 +66,12 @@ export default function CreateItem() {
       updateTotalRoyalties(event.target.value);
   }
   console.log('form', formValues);
+
+  const validForm =
+    !errorTotalTokens &&
+    !errorTotalPercentage &&
+    formValues.noTotalTokens &&
+    formValues.percentageTokens;
   return (
     <div className='w-3/4 mx-auto my-10'>
       <div className='pb-12'>
@@ -130,7 +159,17 @@ export default function CreateItem() {
                   type='number'
                   onChange={handleChange}
                   name='noTotalTokens'
+                  min='1'
+                  aria-describedby={`noTotalTokens`}
+                  className={
+                    errorTotalTokens ? 'error-input-border' : undefined
+                  }
                 />
+                {errorTotalTokens && (
+                  <Form.Text id={`noTotalTokens`}>
+                    <span className={'text-red-400'}>{errorTotalTokens}</span>
+                  </Form.Text>
+                )}
               </FloatingLabel>
 
               <FloatingLabel
@@ -142,7 +181,20 @@ export default function CreateItem() {
                   type='number'
                   onChange={handleChange}
                   name='percentageTokens'
+                  min='1'
+                  max='100'
+                  aria-describedby={`percentageTokens`}
+                  className={
+                    errorTotalPercentage ? 'error-input-border' : undefined
+                  }
                 />
+                {errorTotalPercentage && (
+                  <Form.Text id={`percentageTokens`}>
+                    <span className={'text-red-400'}>
+                      {errorTotalPercentage}
+                    </span>
+                  </Form.Text>
+                )}
               </FloatingLabel>
             </div>
           </div>
@@ -158,7 +210,7 @@ export default function CreateItem() {
               />
             </FloatingLabel>
           </div>
-          {formValues.noTotalTokens && formValues.percentageTokens && (
+          {validForm && (
             <>
               <p className='my-5'>
                 La distribuci&oacute;n de NFTs se va a dar en 3 layers

@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useGlobalContext } from '../../providers/GlobalProviders';
 import styles from './Benefits.component.module.scss';
-import {  layerModel, layerTypeModel } from '../../providers/layerModel';
+import { layerModel, layerTypeModel } from '../../providers/layerModel';
 
 const Benefits = ({ type, benefitsArray }) => {
   const { totalTokens, totalRoyalties, updateLayerVariables } =
@@ -15,7 +15,12 @@ const Benefits = ({ type, benefitsArray }) => {
   //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs
   const handleChange = (e) => {
     updateLayerVariables(type, e.target.name, e.target.value);
-    // setError('Error Message')
+
+    if (e.target.name === layerTypeModel.NO_TOKENS) {
+      setError();
+      +e.target.value >= +totalTokens &&
+        setError(`Tokens should be less than total amount ${totalTokens}`);
+    }
   };
 
   const [totalPercentage, setTotalPercentage] = useState();
@@ -32,9 +37,10 @@ const Benefits = ({ type, benefitsArray }) => {
             <Form.Control
               type='number'
               aria-describedby={`numeroTokens-${type}-numBlock`}
-              className={error && styles['error-input-border']}
+              className={error ? 'error-input-border' : undefined}
               onChange={handleChange}
               name={layerTypeModel.NO_TOKENS}
+              min='1'
             />
             {error && (
               <Form.Text id={`numeroTokens-${type}-numBlock`}>
@@ -51,6 +57,7 @@ const Benefits = ({ type, benefitsArray }) => {
               type='number'
               onChange={handleChange}
               name={layerTypeModel.PRICE}
+              min='1'
             />
           </FloatingLabel>
         </div>
@@ -70,9 +77,7 @@ const Benefits = ({ type, benefitsArray }) => {
             />
             <label
               className='cursor-pointer capitalize-first-letter'
-              htmlFor={`${type}-${b.replaceAll(' ', '-')}-${
-                index + 1
-              }`}
+              htmlFor={`${type}-${b.replaceAll(' ', '-')}-${index + 1}`}
             >
               {b}
             </label>
