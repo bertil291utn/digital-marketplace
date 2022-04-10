@@ -55,9 +55,9 @@ const Benefits = ({ type, benefitsArray }) => {
   const [totalPercentage, setTotalPercentage] = useState();
   return (
     <>
-      <span className='uppercase font-bold'>{layerModel[type]}</span>
-      <div className='my-4 pl-3'>
-        <div className='my-4 grid grid-cols-2 gap-5'>
+      <span className='block uppercase font-bold text-center'>{layerModel[type]}</span>
+      <div className='my-6'>
+        <div className='my-4'>
           <FloatingLabel
             controlId={`numeroTokens-${type}`}
             label='Numero de tokens'
@@ -99,9 +99,9 @@ const Benefits = ({ type, benefitsArray }) => {
         </div>
         {benefitsArray?.length > 0 && (
           <>
-            <span className='block my-3 text-muted'>
+            {/* <span className='block my-3 text-muted'>
               Seleccione los beneficios para este layer
-            </span>
+            </span> */}
             {benefitsArray.map((b, index) => (
               <div key={index} className='flex gap-3 align-items-center'>
                 <input

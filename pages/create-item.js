@@ -13,9 +13,6 @@ export default function CreateItem() {
   const [errorTotalTokens, setErrorTotalTokens] = useState();
   const [errorTotalPercentage, setErrorTotalPercentage] = useState();
   const formRef = useRef();
-  //TODO: UI improvement, add distribution same ad final user view,
-  // left nft image, right description below url
-  //under layers as cards distribution
 
   const [formValues, setFormValues] = useState({
     NFTName: '',
@@ -96,6 +93,35 @@ export default function CreateItem() {
       <div className='pb-12'>
         <div className='grid grid-cols-2 gap-5'>
           <div>
+            <span className=''>NFT Cover</span>
+            <Form.Group controlId='nftCover' className='mb-3'>
+              <Form.Label>
+                {fileCoverUrl && (
+                  <img
+                    src={fileCoverUrl}
+                    className='cursor-pointer'
+                    title='Edit NFT cover'
+                    alt={`file-cover`}
+                    width={275}
+                  />
+                )}
+              </Form.Label>
+              <Form.Control
+                type='file'
+                size='sm'
+                onChange={onChangeCover}
+                hidden={fileCoverUrl}
+              />
+              <div>
+                <Form.Text className='text-muted'>
+                  PNG, JPG, GIF up to 10MB
+                </Form.Text>
+              </div>
+            </Form.Group>
+          </div>
+          {/* 2 */}
+
+          <div>
             <FloatingLabel
               controlId='floatingInput'
               label='Asset name'
@@ -110,6 +136,7 @@ export default function CreateItem() {
             <FloatingLabel
               controlId='floatingTextDescription'
               label='Description'
+              className='mb-3'
             >
               <Form.Control
                 as='textarea'
@@ -118,104 +145,65 @@ export default function CreateItem() {
                 name='description'
               />
             </FloatingLabel>
-          </div>
-          <div>
-            <div>
-              <span className=''>NFT Cover</span>
-              <Form.Group controlId='nftCover' className='mb-3'>
-                <Form.Label>
-                  {fileCoverUrl && (
-                    <img
-                      src={fileCoverUrl}
-                      className='cursor-pointer'
-                      title='Edit NFT cover'
-                      alt={`file-cover`}
-                      width={200}
-                      height={200}
-                    />
-                  )}
-                </Form.Label>
-                <Form.Control
-                  type='file'
-                  size='sm'
-                  onChange={onChangeCover}
-                  hidden={fileCoverUrl}
-                />
-                <div>
-                  <Form.Text className='text-muted'>
-                    PNG, JPG, GIF up to 10MB
-                  </Form.Text>
-                </div>
-              </Form.Group>
-            </div>
-            {/* 2 */}
-            <div>
-              <FloatingLabel
-                controlId='floatingURL'
-                label='Streaming single/album URL'
-                className='mb-3'
-              >
-                <Form.Control
-                  type='text'
-                  name='streamingUrl'
-                  onChange={handleChange}
-                />
-              </FloatingLabel>
-            </div>
+            <FloatingLabel
+              controlId='floatingURL'
+              label='Streaming single/album URL'
+              className='mb-3'
+            >
+              <Form.Control
+                type='text'
+                name='streamingUrl'
+                onChange={handleChange}
+              />
+            </FloatingLabel>
           </div>
         </div>
 
         {/* token detailed info */}
-        <div>
+        <div className='mt-5'>
           <div className='grid grid-cols-2 gap-5'>
-            <div>
-              <FloatingLabel
-                controlId='tokenNumber'
-                label='Numero total de tokens a mintear'
-                className='mb-3'
-              >
-                <Form.Control
-                  type='number'
-                  onChange={handleChange}
-                  name='noTotalTokens'
-                  min='1'
-                  aria-describedby={`noTotalTokens`}
-                  className={
-                    errorTotalTokens ? 'error-input-border' : undefined
-                  }
-                />
-                {errorTotalTokens && (
-                  <Form.Text id={`noTotalTokens`}>
-                    <span className={'text-red-400'}>{errorTotalTokens}</span>
-                  </Form.Text>
-                )}
-              </FloatingLabel>
+            <FloatingLabel
+              controlId='tokenNumber'
+              label='Numero total de tokens a mintear'
+              className='mb-3'
+            >
+              <Form.Control
+                type='number'
+                onChange={handleChange}
+                name='noTotalTokens'
+                min='1'
+                aria-describedby={`noTotalTokens`}
+                className={errorTotalTokens ? 'error-input-border' : undefined}
+              />
+              {errorTotalTokens && (
+                <Form.Text id={`noTotalTokens`}>
+                  <span className={'text-red-400'}>{errorTotalTokens}</span>
+                </Form.Text>
+              )}
+            </FloatingLabel>
 
-              <FloatingLabel
-                controlId='tokenNumber'
-                label='Porcentaje a ceder para regalias ex. 20%'
-                className='mb-3'
-              >
-                <Form.Control
-                  type='number'
-                  onChange={handleChange}
-                  name='percentageTokens'
-                  min='1'
-                  max='100'
-                  aria-describedby={`percentageTokens`}
-                  className={
-                    errorTotalPercentage ? 'error-input-border' : undefined
-                  }
-                />
-                {errorTotalPercentage && (
-                  <Form.Text id={`percentageTokens`}>
-                    <span className={'text-red-400'}>
-                      {errorTotalPercentage}
-                    </span>
-                  </Form.Text>
-                )}
-              </FloatingLabel>
-            </div>
+            <FloatingLabel
+              controlId='tokenNumber'
+              label='Porcentaje a ceder para regalias ex. 20%'
+              className='mb-3'
+            >
+              <Form.Control
+                type='number'
+                onChange={handleChange}
+                name='percentageTokens'
+                min='1'
+                max='100'
+                aria-describedby={`percentageTokens`}
+                className={
+                  errorTotalPercentage ? 'error-input-border' : undefined
+                }
+              />
+              {errorTotalPercentage && (
+                <Form.Text id={`percentageTokens`}>
+                  <span className={'text-red-400'}>{errorTotalPercentage}</span>
+                </Form.Text>
+              )}
+            </FloatingLabel>
           </div>
 
           <div className='my-4'>
@@ -230,16 +218,16 @@ export default function CreateItem() {
             </FloatingLabel>
           </div>
           {validForm && (
-            <>
-              <p className='my-5'>
+            <div className='mt-10'>
+              <p className='my-3'>
                 La distribuci&oacute;n de NFTs se va a dar en 3 layers
               </p>
 
               <div className='my-4'>
                 <form onSubmit={handleSubmit}>
-                  <ul>
+                  <ul className='grid grid-cols-3 gap-4 mt-10'>
                     {Object.keys(layerModel).map((_key) => (
-                      <li className='my-5' key={_key}>
+                      <li className='border border-gray-300 rounded-lg p-4 shadow-md' key={_key}>
                         <Benefits type={_key} benefitsArray={benefitsArray} />
                       </li>
                     ))}
@@ -248,7 +236,7 @@ export default function CreateItem() {
                   <button type='submit'>Submit</button>
                 </form>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
