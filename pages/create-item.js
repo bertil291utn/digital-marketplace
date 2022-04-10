@@ -34,6 +34,7 @@ export default function CreateItem() {
   }
 
   function onChangeCover(e) {
+    if (e.target.files.length === 0) return;
     const preview = URL?.createObjectURL(e.target.files[0]);
     setFileCoverUrl(preview);
   }
