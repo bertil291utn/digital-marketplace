@@ -167,8 +167,8 @@ const Benefits = ({ type, benefitsArray }) => {
               <div className='self-center text-right mt-4'>
                 <span className=' font-bold'>
                   {`${
-                    formValues[layerTypeModel.PERCENTAGE] /
-                    formValues[layerTypeModel.NO_TOKENS]
+                    parseFloat(formValues[layerTypeModel.PERCENTAGE] /
+                    formValues[layerTypeModel.NO_TOKENS]).toFixed(4)
                   }%`}
                 </span>
                 <span className='text-gray-400 text-xs'>{` de regalias por token`}</span>
@@ -185,11 +185,6 @@ const Benefits = ({ type, benefitsArray }) => {
               </div>
             </>
           )}
-        {totalPercentage && (
-          <p className='my-4'>
-            {`${totalPercentage} Porcentaje de ownership en este layer`}
-          </p>
-        )}
       </div>
     </>
   );

@@ -4,15 +4,45 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
-import { layerModel } from '../providers/layerModel';
+import { layerModel, layerTypeModel } from '../providers/layerModel';
+import { Button } from 'react-bootstrap';
 
 export default function CreateItem() {
-  const { updateTotalTokens, updateTotalRoyalties, layerVariables } =
-    useGlobalContext();
+  const {
+    updateTotalTokens,
+    updateTotalRoyalties,
+    layerVariables,
+    totalTokens,
+    totalRoyalties,
+  } = useGlobalContext();
   const [fileCoverUrl, setFileCoverUrl] = useState();
-  const [errorTotalTokens, setErrorTotalTokens] = useState();
-  const [errorTotalPercentage, setErrorTotalPercentage] = useState();
-  const formRef = useRef();
+  const [errorTokens, setErrorTokens] = useState();
+  const [errorPercentage, setErrorPercentage] = useState();
+  const [totalTokensError, setTotalTokensError] = useState();
+  const [totalPercentageError, setTotalPercentageError] = useState();
+
+  useEffect(() => {
+    const totalTokensSum = Object.values(layerVariables)
+      .map((n) => +n[layerTypeModel.NO_TOKENS])
+      .filter((e) => e)
+      .reduce((a, b) => a + b, 0);
+    const totalPercentageSum = Object.values(layerVariables)
+      .map((n) => +n[layerTypeModel.PERCENTAGE])
+      .filter((e) => e)
+      .reduce((a, b) => a + b, 0);
+    totalTokensSum > totalTokens &&
+      setTotalTokensError(
+        `El total de tokens debe ser igual a  ${totalTokens}`
+      );
+    totalPercentageSum > totalRoyalties &&
+      setTotalPercentageError(
+        `El total de porcentajes debe ser igual a  ${totalRoyalties}%`
+      );
+    return () => {
+      setTotalTokensError();
+      setTotalPercentageError();
+    };
+  }, [layerVariables, totalRoyalties, totalTokens]);
 
   const [formValues, setFormValues] = useState({
     NFTName: '',
@@ -26,8 +56,7 @@ export default function CreateItem() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    console.log('new formDATA', formData);
+    console.log('check all validations ');
 
     //TODO: get total tokens sum and compare if is not greater than total amount of tokens,
     // same for total percentage
@@ -41,8 +70,8 @@ export default function CreateItem() {
   }
 
   function handleChange(event) {
-    setErrorTotalPercentage();
-    setErrorTotalTokens();
+    setErrorPercentage();
+    setErrorTokens();
     if (!event.target.value) {
       event.target.name === 'noTotalTokens' &&
         updateTotalTokens(event.target.value);
@@ -52,13 +81,13 @@ export default function CreateItem() {
     }
     if (event.target.name === 'noTotalTokens') {
       if (!(event.target.value > 0 && event.target.value <= 10_000)) {
-        setErrorTotalTokens('Values between 1 and 10_000');
+        setErrorTokens('Ingrese valores entre 1 y 10_000');
         return;
       }
     }
     if (event.target.name === 'percentageTokens') {
       if (!(event.target.value > 0 && event.target.value <= 100)) {
-        setErrorTotalPercentage('Values between 1 and 100');
+        setErrorPercentage('Ingrese valores entre 1 y 100');
         return;
       }
     }
@@ -88,13 +117,13 @@ export default function CreateItem() {
   }
 
   const validForm =
-    !errorTotalTokens &&
-    !errorTotalPercentage &&
+    !errorTokens &&
+    !errorPercentage &&
     formValues.noTotalTokens &&
     formValues.percentageTokens;
   return (
     <div className='w-3/4 mx-auto my-10'>
-      <div className='pb-12'>
+      <div className='pb-32'>
         <div className='grid grid-cols-2 gap-5'>
           <div>
             <span className=''>NFT Cover</span>
@@ -177,11 +206,11 @@ export default function CreateItem() {
                 name='noTotalTokens'
                 min='1'
                 aria-describedby={`noTotalTokens`}
-                className={errorTotalTokens ? 'error-input-border' : undefined}
+                className={errorTokens ? 'error-input-border' : undefined}
               />
-              {errorTotalTokens && (
+              {errorTokens && (
                 <Form.Text id={`noTotalTokens`}>
-                  <span className={'text-red-400'}>{errorTotalTokens}</span>
+                  <span className={'text-red-400'}>{errorTokens}</span>
                 </Form.Text>
               )}
             </FloatingLabel>
@@ -198,13 +227,11 @@ export default function CreateItem() {
                 min='1'
                 max='100'
                 aria-describedby={`percentageTokens`}
-                className={
-                  errorTotalPercentage ? 'error-input-border' : undefined
-                }
+                className={errorPercentage ? 'error-input-border' : undefined}
               />
-              {errorTotalPercentage && (
+              {errorPercentage && (
                 <Form.Text id={`percentageTokens`}>
-                  <span className={'text-red-400'}>{errorTotalPercentage}</span>
+                  <span className={'text-red-400'}>{errorPercentage}</span>
                 </Form.Text>
               )}
             </FloatingLabel>
@@ -231,13 +258,32 @@ export default function CreateItem() {
                 <form onSubmit={handleSubmit}>
                   <ul className='grid grid-cols-3 gap-4 mt-10'>
                     {Object.keys(layerModel).map((_key) => (
-                      <li className='border border-gray-300 rounded-lg p-4 pb-0 shadow-md' key={_key}>
+                      <li
+                        className='border border-gray-300 rounded-lg p-4 pb-0 shadow-md'
+                        key={_key}
+                      >
                         <Benefits type={_key} benefitsArray={benefitsArray} />
                       </li>
                     ))}
                   </ul>
-                  <p>Porcentaje total </p>
-                  <button type='submit'>Submit</button>
+                  {totalTokensError && (
+                    <span className={'text-red-400 block my-2'}>
+                      {totalTokensError}
+                    </span>
+                  )}
+                  {totalPercentageError && (
+                    <span className={'text-red-400 block my-2'}>
+                      {totalPercentageError}
+                    </span>
+                  )}
+                  <Button
+                    variant='primary'
+                    type='submit'
+                    className='fixed bottom-5 w-3/4 mx-auto'
+                    size='lg'
+                  >
+                    Mint file
+                  </Button>
                 </form>
               </div>
             </div>
