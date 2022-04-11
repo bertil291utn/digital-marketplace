@@ -28,6 +28,10 @@ export default function CreateItem() {
     event.preventDefault();
     const formData = new FormData(event.target);
     console.log('new formDATA', formData);
+
+    //TODO: get total tokens sum and compare if is not greater than total amount of tokens,
+    // same for total percentage
+    //if theres error display error messages
   }
 
   function onChangeCover(e) {

@@ -1,5 +1,6 @@
 export const layerTypeModel = {
   NO_TOKENS: 'noTokens',
+  PERCENTAGE: 'percentage',
   PRICE: 'price',
 }
 

@@ -12,6 +12,7 @@ const GlobalProvider = ({ children }) => {
         ...a,
         [b]: {
           [layerTypeModel.NO_TOKENS]: '',
+          [layerTypeModel.PERCENTAGE]: '',
           [layerTypeModel.PRICE]: '',
         },
       }),

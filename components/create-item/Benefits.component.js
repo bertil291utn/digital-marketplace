@@ -11,8 +11,10 @@ const Benefits = ({ type, benefitsArray }) => {
 
   const [error, setError] = useState();
   const [zeroError, setZeroError] = useState();
+  const [percentageError, setPercentageError] = useState();
   const [formValues, setFormValues] = useState({
     [layerTypeModel.NO_TOKENS]: '',
+    [layerTypeModel.PERCENTAGE]: '',
     [layerTypeModel.PRICE]: '',
   });
 
@@ -55,8 +57,6 @@ const Benefits = ({ type, benefitsArray }) => {
     updateLayerVariables(type, e.target.name, e.target.value);
   };
 
-  useEffect(() => {}, []);
-
   console.log('layerVariables', layerVariables);
 
   const [totalPercentage, setTotalPercentage] = useState();
@@ -86,6 +86,28 @@ const Benefits = ({ type, benefitsArray }) => {
               </Form.Text>
             )}
           </FloatingLabel>
+
+          <FloatingLabel
+            controlId={`percentage-${type}`}
+            label='Porcentaje para este layer'
+            className='mb-3'
+          >
+            <Form.Control
+              type='number'
+              onChange={handleChange}
+              name={layerTypeModel.PERCENTAGE}
+              min='1'
+              max={totalRoyalties}
+              aria-describedby={`percentage-${type}-numBlock`}
+              className={zeroError ? 'error-input-border' : undefined}
+            />
+            {percentageError && (
+              <Form.Text id={`percentage-${type}-numBlock`}>
+                <span className={'text-red-400'}>{percentageError}</span>
+              </Form.Text>
+            )}
+          </FloatingLabel>
+
           <FloatingLabel
             controlId={`precioToken-${type}`}
             label='Precio en USD por token ex. $99'
@@ -136,12 +158,33 @@ const Benefits = ({ type, benefitsArray }) => {
                   </div>
                 ))}
               </div>
-              {formValues[layerTypeModel.NO_TOKENS] && (
-                <div className='self-center text-right font-bold mt-4'>0.005 %</div>
-              )}
             </div>
           </>
         )}
+        {formValues[layerTypeModel.NO_TOKENS] &&
+          formValues[layerTypeModel.PERCENTAGE] && (
+            <>
+              <div className='self-center text-right mt-4'>
+                <span className=' font-bold'>
+                  {`${
+                    formValues[layerTypeModel.PERCENTAGE] /
+                    formValues[layerTypeModel.NO_TOKENS]
+                  }%`}
+                </span>
+                <span className='text-gray-400 text-xs'>{` de regalias por token`}</span>
+              </div>
+              <div className='self-center text-right my-1'>
+                <span className='text-gray-400 text-xs'>{`${
+                  formValues[layerTypeModel.PERCENTAGE]
+                }% de ${totalRoyalties}%`}</span>
+              </div>
+              <div className='self-center text-right my-1'>
+                <span className='text-gray-400 text-xs'>{`${
+                  formValues[layerTypeModel.NO_TOKENS]
+                } de ${totalTokens}`}</span>
+              </div>
+            </>
+          )}
         {totalPercentage && (
           <p className='my-4'>
             {`${totalPercentage} Porcentaje de ownership en este layer`}
