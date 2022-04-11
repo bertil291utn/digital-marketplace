@@ -227,7 +227,7 @@ export default function CreateItem() {
                 <form onSubmit={handleSubmit}>
                   <ul className='grid grid-cols-3 gap-4 mt-10'>
                     {Object.keys(layerModel).map((_key) => (
-                      <li className='border border-gray-300 rounded-lg p-4 shadow-md' key={_key}>
+                      <li className='border border-gray-300 rounded-lg p-4 pb-0 shadow-md' key={_key}>
                         <Benefits type={_key} benefitsArray={benefitsArray} />
                       </li>
                     ))}

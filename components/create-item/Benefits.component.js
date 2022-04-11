@@ -11,6 +11,10 @@ const Benefits = ({ type, benefitsArray }) => {
 
   const [error, setError] = useState();
   const [zeroError, setZeroError] = useState();
+  const [formValues, setFormValues] = useState({
+    [layerTypeModel.NO_TOKENS]: '',
+    [layerTypeModel.PRICE]: '',
+  });
 
   //TODO: make total percentage royalties math operation for an specific layer using total(token and percentage) variables
   //TODO: after enter values(tokens) on each layer, display error/warning messages on inputs
@@ -45,6 +49,9 @@ const Benefits = ({ type, benefitsArray }) => {
     //     return;
     //   }
     // }
+
+    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+
     updateLayerVariables(type, e.target.name, e.target.value);
   };
 
@@ -55,7 +62,9 @@ const Benefits = ({ type, benefitsArray }) => {
   const [totalPercentage, setTotalPercentage] = useState();
   return (
     <>
-      <span className='block uppercase font-bold text-center'>{layerModel[type]}</span>
+      <span className='block uppercase font-bold text-center'>
+        {layerModel[type]}
+      </span>
       <div className='my-6'>
         <div className='my-4'>
           <FloatingLabel
@@ -102,28 +111,35 @@ const Benefits = ({ type, benefitsArray }) => {
             {/* <span className='block my-3 text-muted'>
               Seleccione los beneficios para este layer
             </span> */}
-            {benefitsArray.map((b, index) => (
-              <div key={index} className='flex gap-3 align-items-center'>
-                <input
-                  className='h-4 w-4 cursor-pointer'
-                  type='checkbox'
-                  name={`${b.toLowerCase().replaceAll(' ', '-')}`}
-                  id={`${type}-${b.replaceAll(' ', '-')}-${index + 1}`}
-                  onChange={(event) => {
-                    updateLayerVariables(type, 'benefits', {
-                      ...layerVariables[type].benefits,
-                      [event.target.name]: event.target.checked,
-                    });
-                  }}
-                />
-                <label
-                  className='cursor-pointer capitalize-first-letter'
-                  htmlFor={`${type}-${b.replaceAll(' ', '-')}-${index + 1}`}
-                >
-                  {b}
-                </label>
+            <div className=''>
+              <div>
+                {benefitsArray.map((b, index) => (
+                  <div key={index} className='flex gap-3 align-items-center'>
+                    <input
+                      className='h-4 w-4 cursor-pointer'
+                      type='checkbox'
+                      name={`${b.toLowerCase().replaceAll(' ', '-')}`}
+                      id={`${type}-${b.replaceAll(' ', '-')}-${index + 1}`}
+                      onChange={(event) => {
+                        updateLayerVariables(type, 'benefits', {
+                          ...layerVariables[type].benefits,
+                          [event.target.name]: event.target.checked,
+                        });
+                      }}
+                    />
+                    <label
+                      className='cursor-pointer capitalize-first-letter'
+                      htmlFor={`${type}-${b.replaceAll(' ', '-')}-${index + 1}`}
+                    >
+                      {b}
+                    </label>
+                  </div>
+                ))}
               </div>
-            ))}
+              {formValues[layerTypeModel.NO_TOKENS] && (
+                <div className='self-center text-right font-bold mt-4'>0.005 %</div>
+              )}
+            </div>
           </>
         )}
         {totalPercentage && (
