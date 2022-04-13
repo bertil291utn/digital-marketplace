@@ -15,35 +15,19 @@ export default function CreateItem() {
     totalTokens,
     totalRoyalties,
   } = useGlobalContext();
-  const [fileCoverUrl, setFileCoverUrl] = useState();
+  //error states
   const [errorTokens, setErrorTokens] = useState();
   const [errorPercentage, setErrorPercentage] = useState();
+  const [errorAllBenefits, setErrorAllBenefits] = useState();
+  const [errorNFTName, setErrorNFTName] = useState();
+  const [errorDescription, setErrorDescription] = useState();
+  const [errorStreamingURL, setErrorStreamingURL] = useState();
+  const [errorCoverFile, setErrorCoverFile] = useState();
+
+  const [fileCoverUrl, setFileCoverUrl] = useState();
   const [totalTokensError, setTotalTokensError] = useState();
   const [totalPercentageError, setTotalPercentageError] = useState();
-
-  useEffect(() => {
-    const totalTokensSum = Object.values(layerVariables)
-      .map((n) => +n[layerTypeModel.NO_TOKENS])
-      .filter((e) => e)
-      .reduce((a, b) => a + b, 0);
-    const totalPercentageSum = Object.values(layerVariables)
-      .map((n) => +n[layerTypeModel.PERCENTAGE])
-      .filter((e) => e)
-      .reduce((a, b) => a + b, 0);
-    totalTokensSum > totalTokens &&
-      setTotalTokensError(
-        `El total de tokens debe ser igual a  ${totalTokens}`
-      );
-    totalPercentageSum > totalRoyalties &&
-      setTotalPercentageError(
-        `El total de porcentajes debe ser igual a  ${totalRoyalties}%`
-      );
-    return () => {
-      setTotalTokensError();
-      setTotalPercentageError();
-    };
-  }, [layerVariables, totalRoyalties, totalTokens]);
-
+  const [benefitsArray, setBenefitsArray] = useState([]);
   const [formValues, setFormValues] = useState({
     NFTName: '',
     description: '',
@@ -52,11 +36,83 @@ export default function CreateItem() {
     percentageTokens: '',
     benefits: '',
   });
-  const [benefitsArray, setBenefitsArray] = useState([]);
+
+  // useEffect(() => {
+  //   const totalTokensSum = Object.values(layerVariables)
+  //     .map((n) => +n[layerTypeModel.NO_TOKENS])
+  //     .filter((e) => e)
+  //     .reduce((a, b) => a + b, 0);
+  //   const totalPercentageSum = Object.values(layerVariables)
+  //     .map((n) => +n[layerTypeModel.PERCENTAGE])
+  //     .filter((e) => e)
+  //     .reduce((a, b) => a + b, 0);
+
+  //   totalTokensSum > 0 &&
+  //     totalTokensSum !== totalTokens &&
+  //     setTotalTokensError(
+  //       `El total de tokens debe ser igual a  ${totalTokens}`
+  //     );
+  //   totalPercentageSum > 0 &&
+  //     totalPercentageSum !== totalRoyalties &&
+  //     setTotalPercentageError(
+  //       `El total de porcentajes debe ser igual a  ${totalRoyalties}%`
+  //     );
+  //   formValues.benefits &&
+  //     benefitsArray.length < 3 &&
+  //     setErrorAllBenefits(`Ingrese al menos 3 beneficios`);
+  //   return () => {
+  //     setTotalTokensError();
+  //     setTotalPercentageError();
+  //     setErrorAllBenefits();
+  //   };
+  // }, [benefitsArray.length, formValues, layerVariables, totalRoyalties, totalTokens]);
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log('check all validations ');
+    setTotalTokensError();
+    setTotalPercentageError();
+    setErrorAllBenefits();
+    setErrorStreamingURL();
+    setErrorNFTName();
+    setErrorDescription();
+
+    const totalTokensSum = Object.values(layerVariables)
+      .map((n) => +n[layerTypeModel.NO_TOKENS])
+      .filter((e) => e)
+      .reduce((a, b) => a + b, 0);
+    const totalPercentageSum = Object.values(layerVariables)
+      .map((n) => +n[layerTypeModel.PERCENTAGE])
+      .filter((e) => e)
+      .reduce((a, b) => a + b, 0);
+      
+    +totalTokensSum !== +totalTokens &&
+      setTotalTokensError(
+        `El total de tokens debe ser igual a  ${totalTokens}`
+      );
+
+    +totalPercentageSum !== +totalRoyalties &&
+      setTotalPercentageError(
+        `El total de porcentajes debe ser igual a  ${totalRoyalties}%`
+      );
+    (!formValues.benefits || benefitsArray.length < 3) &&
+      setErrorAllBenefits(`Ingrese al menos 3 beneficios`);
+
+    !formValues.NFTName && setErrorNFTName(`Ingrese un nombre`);
+    !formValues.description && setErrorDescription(`Ingrese una descripcion`);
+    !formValues.streamingUrl &&
+      setErrorStreamingURL(`Ingrese el url del single/album`);
+    !fileCoverUrl && setErrorCoverFile(`Agregue la imagen nft`);
+
+    if (
+      totalTokensError ||
+      totalPercentageError ||
+      errorAllBenefits ||
+      errorStreamingURL ||
+      errorCoverFile
+    )
+      return;
+    console.log('mintear my nft');
+    //mint nfts
 
     //TODO: get total tokens sum and compare if is not greater than total amount of tokens,
     // same for total percentage
@@ -144,7 +200,13 @@ export default function CreateItem() {
                 size='sm'
                 onChange={onChangeCover}
                 hidden={fileCoverUrl}
+                aria-describedby={`ErrorCoverFile`}
               />
+              {errorCoverFile && (
+                <Form.Text id={`ErrorCoverFile`}>
+                  <span className={'text-red-400'}>{errorCoverFile}</span>
+                </Form.Text>
+              )}
               <div>
                 <Form.Text className='text-muted'>
                   PNG, JPG, GIF up to 10MB
@@ -164,7 +226,13 @@ export default function CreateItem() {
                 type='text'
                 name='NFTName'
                 onChange={handleChange}
+                aria-describedby={`ErrorNFTName`}
               />
+              {errorNFTName && (
+                <Form.Text id={`ErrorNFTName`}>
+                  <span className={'text-red-400'}>{errorNFTName}</span>
+                </Form.Text>
+              )}
             </FloatingLabel>
             <FloatingLabel
               controlId='floatingTextDescription'
@@ -176,7 +244,13 @@ export default function CreateItem() {
                 style={{ height: '100px' }}
                 onChange={handleChange}
                 name='description'
+                aria-describedby={`ErrorDescription`}
               />
+              {errorDescription && (
+                <Form.Text id={`ErrorDescription`}>
+                  <span className={'text-red-400'}>{errorDescription}</span>
+                </Form.Text>
+              )}
             </FloatingLabel>
             <FloatingLabel
               controlId='floatingURL'
@@ -187,7 +261,13 @@ export default function CreateItem() {
                 type='text'
                 name='streamingUrl'
                 onChange={handleChange}
+                aria-describedby={`ErrorStreamingURL`}
               />
+              {errorStreamingURL && (
+                <Form.Text id={`ErrorStreamingURL`}>
+                  <span className={'text-red-400'}>{errorStreamingURL}</span>
+                </Form.Text>
+              )}
             </FloatingLabel>
           </div>
         </div>
@@ -238,7 +318,10 @@ export default function CreateItem() {
           </div>
 
           <div className='my-4'>
-            <FloatingLabel controlId='allPerks' label='Describe all benefits'>
+            <FloatingLabel
+              controlId='allPerks'
+              label='Describe all benefits (to add new use ENTER key)'
+            >
               <Form.Control
                 as='textarea'
                 style={{ height: '150px' }}
@@ -246,6 +329,11 @@ export default function CreateItem() {
                 value={formValues.benefits}
                 name='benefits'
               />
+              {errorAllBenefits && (
+                <Form.Text id={`AllBenefitsTokens`}>
+                  <span className={'text-red-400'}>{errorAllBenefits}</span>
+                </Form.Text>
+              )}
             </FloatingLabel>
           </div>
           {validForm && (

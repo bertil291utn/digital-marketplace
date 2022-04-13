@@ -57,7 +57,6 @@ const Benefits = ({ type, benefitsArray }) => {
     updateLayerVariables(type, e.target.name, e.target.value);
   };
 
-  console.log('layerVariables', layerVariables);
 
   const [totalPercentage, setTotalPercentage] = useState();
   return (
@@ -130,9 +129,9 @@ const Benefits = ({ type, benefitsArray }) => {
         </div>
         {benefitsArray?.length > 0 && (
           <>
-            {/* <span className='block my-3 text-muted'>
-              Seleccione los beneficios para este layer
-            </span> */}
+            <span className='block my-3 text-muted text-xs'>
+              Seleccione beneficios para este layer
+            </span>
             <div className=''>
               <div>
                 {benefitsArray.map((b, index) => (
