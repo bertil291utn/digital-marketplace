@@ -16,6 +16,14 @@ export default function CreateItem() {
     totalRoyalties,
   } = useGlobalContext();
   //error states
+  const initialState = {
+    NFTName: '',
+    description: '',
+    streamingUrl: '',
+    noTotalTokens: '',
+    percentageTokens: '',
+    benefits: '',
+  };
   const [errorTokens, setErrorTokens] = useState();
   const [errorPercentage, setErrorPercentage] = useState();
   const [errorAllBenefits, setErrorAllBenefits] = useState();
@@ -28,44 +36,9 @@ export default function CreateItem() {
   const [totalTokensError, setTotalTokensError] = useState();
   const [totalPercentageError, setTotalPercentageError] = useState();
   const [benefitsArray, setBenefitsArray] = useState([]);
-  const [formValues, setFormValues] = useState({
-    NFTName: '',
-    description: '',
-    streamingUrl: '',
-    noTotalTokens: '',
-    percentageTokens: '',
-    benefits: '',
-  });
-
-  // useEffect(() => {
-  //   const totalTokensSum = Object.values(layerVariables)
-  //     .map((n) => +n[layerTypeModel.NO_TOKENS])
-  //     .filter((e) => e)
-  //     .reduce((a, b) => a + b, 0);
-  //   const totalPercentageSum = Object.values(layerVariables)
-  //     .map((n) => +n[layerTypeModel.PERCENTAGE])
-  //     .filter((e) => e)
-  //     .reduce((a, b) => a + b, 0);
-
-  //   totalTokensSum > 0 &&
-  //     totalTokensSum !== totalTokens &&
-  //     setTotalTokensError(
-  //       `El total de tokens debe ser igual a  ${totalTokens}`
-  //     );
-  //   totalPercentageSum > 0 &&
-  //     totalPercentageSum !== totalRoyalties &&
-  //     setTotalPercentageError(
-  //       `El total de porcentajes debe ser igual a  ${totalRoyalties}%`
-  //     );
-  //   formValues.benefits &&
-  //     benefitsArray.length < 3 &&
-  //     setErrorAllBenefits(`Ingrese al menos 3 beneficios`);
-  //   return () => {
-  //     setTotalTokensError();
-  //     setTotalPercentageError();
-  //     setErrorAllBenefits();
-  //   };
-  // }, [benefitsArray.length, formValues, layerVariables, totalRoyalties, totalTokens]);
+  const [formValues, setFormValues] = useState(initialState);
+  const [validForm, setValidForm] = useState();
+  const [selectedBenefitsError, setSelectedBenefitsError] = useState();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -75,6 +48,8 @@ export default function CreateItem() {
     setErrorStreamingURL();
     setErrorNFTName();
     setErrorDescription();
+    setErrorCoverFile();
+    setSelectedBenefitsError();
 
     const totalTokensSum = Object.values(layerVariables)
       .map((n) => +n[layerTypeModel.NO_TOKENS])
@@ -84,7 +59,7 @@ export default function CreateItem() {
       .map((n) => +n[layerTypeModel.PERCENTAGE])
       .filter((e) => e)
       .reduce((a, b) => a + b, 0);
-      
+
     +totalTokensSum !== +totalTokens &&
       setTotalTokensError(
         `El total de tokens debe ser igual a  ${totalTokens}`
@@ -103,20 +78,24 @@ export default function CreateItem() {
       setErrorStreamingURL(`Ingrese el url del single/album`);
     !fileCoverUrl && setErrorCoverFile(`Agregue la imagen nft`);
 
-    if (
-      totalTokensError ||
-      totalPercentageError ||
-      errorAllBenefits ||
-      errorStreamingURL ||
-      errorCoverFile
-    )
-      return;
+    let benefitLayerError = 
+    Object.values(layerVariables).some((val) => 
+
+      !Object.values(val.benefits).some(val => val) 
+    );
+    benefitLayerError && setSelectedBenefitsError(`Seleccione al menos un beneficio en cada layer`);
+   
+    const _disabledToMint =
+      +totalTokensSum !== +totalTokens ||
+      +totalPercentageSum !== +totalRoyalties ||
+      benefitLayerError;
+      
+    if (_disabledToMint) return;
     console.log('mintear my nft');
+    console.log('formValues', formValues);
+    console.log('layerVariables', layerVariables);
     //mint nfts
 
-    //TODO: get total tokens sum and compare if is not greater than total amount of tokens,
-    // same for total percentage
-    //if theres error display error messages
   }
 
   function onChangeCover(e) {
@@ -172,11 +151,21 @@ export default function CreateItem() {
       updateTotalRoyalties(event.target.value);
   }
 
-  const validForm =
-    !errorTokens &&
-    !errorPercentage &&
-    formValues.noTotalTokens &&
-    formValues.percentageTokens;
+  useEffect(() => {
+    setValidForm(
+      !errorTokens &&
+        !errorPercentage &&
+        fileCoverUrl &&
+        formValues.noTotalTokens &&
+        formValues.percentageTokens &&
+        formValues.NFTName &&
+        formValues.description &&
+        formValues.streamingUrl &&
+        formValues.benefits &&
+        benefitsArray.length >= 3
+    );
+  }, [errorPercentage, errorTokens, fileCoverUrl, formValues]);
+
   return (
     <div className='w-3/4 mx-auto my-10'>
       <div className='pb-32'>
@@ -362,6 +351,11 @@ export default function CreateItem() {
                   {totalPercentageError && (
                     <span className={'text-red-400 block my-2'}>
                       {totalPercentageError}
+                    </span>
+                  )}
+                  {selectedBenefitsError && (
+                    <span className={'text-red-400 block my-2'}>
+                      {selectedBenefitsError}
                     </span>
                   )}
                   <Button

@@ -23,6 +23,7 @@
     "dotenv": "^10.0.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.1",
+    "formik": "^2.2.9",
     "framer-motion": "^6",
     "hardhat": "^2.4.3",
     "ipfs-http-client": "^50.1.2",
@@ -31,7 +32,8 @@
     "react-bootstrap": "^2.2.2",
     "react-dom": "17.0.2",
     "sass": "^1.50.0",
-    "web3modal": "^1.9.3"
+    "web3modal": "^1.9.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.1",
