@@ -1,4 +1,5 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 
-const sdk = new ThirdwebSDK('rinkeby');
-export const contract = sdk.getEdition(process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS);
+export const sdk = new ThirdwebSDK(
+  process.env.NEXT_PUBLIC_ENV === 'develop' ? 'mumbai' : 'polygon'
+);
