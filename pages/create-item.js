@@ -1,14 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
 import { layerModel, layerTypeModel } from '../providers/layerModel';
 import { Button } from 'react-bootstrap';
-import { NFTContract } from '../utils/nft-contract';
+import { mintNFT } from '../utils/nft-contract';
+import { useAddress } from '@thirdweb-dev/react';
 
 export default function CreateItem() {
+  const address = useAddress();
+
   const {
     updateTotalTokens,
     updateTotalRoyalties,
@@ -97,25 +100,26 @@ export default function CreateItem() {
     console.log('mintear my nft');
     console.log('formValues', formValues);
     console.log('layerVariables', layerVariables);
-    const metadataWithSupply = [
-      {
-        supply: +formValues.noTotalTokens,
-        metadata: {
-          name: formValues.NFTName,
-          description: formValues.description,
-          image: coverFile,
-          external_url: 'https://www.distrofank.xyz/token/number',
-          additional_info: {
-            benefits: formValues.benefits,
-            noTotalTokens: formValues.noTotalTokens,
-            percentageTokens: formValues.percentageTokens,
-            streamingUrl: formValues.streamingUrl,
-            layers: layerVariables,
-          },
+    const metadataWithSupply = {
+      supply: +formValues.noTotalTokens,
+      metadata: {
+        name: formValues.NFTName,
+        description: formValues.description,
+        image: coverFile,
+        external_url: 'https://www.distrofank.xyz/token/number',
+        additional_info: {
+          benefits: formValues.benefits,
+          noTotalTokens: formValues.noTotalTokens,
+          percentageTokens: formValues.percentageTokens,
+          streamingUrl: formValues.streamingUrl,
+          layers: layerVariables,
         },
       },
-    ];
-    // await mintNFT(NFTContract,my addres,metadataWithSupply);
+    };
+
+    const tx = address && (await mintNFT(address, metadataWithSupply));
+    console.log('tx',tx)
+    console.log('tx data',await tx.data())
   }
 
   function onChangeCover(e) {
