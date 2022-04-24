@@ -6,6 +6,7 @@ import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
 import { layerModel, layerTypeModel } from '../providers/layerModel';
 import { Button } from 'react-bootstrap';
+import { NFTContract } from '../utils/nft-contract';
 
 export default function CreateItem() {
   const {
@@ -32,7 +33,8 @@ export default function CreateItem() {
   const [errorStreamingURL, setErrorStreamingURL] = useState();
   const [errorCoverFile, setErrorCoverFile] = useState();
 
-  const [fileCoverUrl, setFileCoverUrl] = useState();
+  const [coverFile, setCoverFile] = useState();
+  const [fileCoverUrlPreview, setFileCoverUrlPreview] = useState();
   const [totalTokensError, setTotalTokensError] = useState();
   const [totalPercentageError, setTotalPercentageError] = useState();
   const [benefitsArray, setBenefitsArray] = useState([]);
@@ -40,7 +42,7 @@ export default function CreateItem() {
   const [validForm, setValidForm] = useState();
   const [selectedBenefitsError, setSelectedBenefitsError] = useState();
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     setTotalTokensError();
     setTotalPercentageError();
@@ -76,32 +78,51 @@ export default function CreateItem() {
     !formValues.description && setErrorDescription(`Ingrese una descripcion`);
     !formValues.streamingUrl &&
       setErrorStreamingURL(`Ingrese el url del single/album`);
-    !fileCoverUrl && setErrorCoverFile(`Agregue la imagen nft`);
+    !fileCoverUrlPreview && setErrorCoverFile(`Agregue la imagen nft`);
 
-    let benefitLayerError = 
-    Object.values(layerVariables).some((val) => 
-
-      !Object.values(val.benefits).some(val => val) 
+    let benefitLayerError = Object.values(layerVariables).some(
+      (val) => !Object.values(val.benefits).some((val) => val)
     );
-    benefitLayerError && setSelectedBenefitsError(`Seleccione al menos un beneficio en cada layer`);
-   
+    benefitLayerError &&
+      setSelectedBenefitsError(
+        `Seleccione al menos un beneficio en cada layer`
+      );
+
     const _disabledToMint =
       +totalTokensSum !== +totalTokens ||
       +totalPercentageSum !== +totalRoyalties ||
       benefitLayerError;
-      
+
     if (_disabledToMint) return;
     console.log('mintear my nft');
     console.log('formValues', formValues);
     console.log('layerVariables', layerVariables);
-    //mint nfts
-
+    const metadataWithSupply = [
+      {
+        supply: +formValues.noTotalTokens,
+        metadata: {
+          name: formValues.NFTName,
+          description: formValues.description,
+          image: coverFile,
+          external_url: 'https://www.distrofank.xyz/token/number',
+          additional_info: {
+            benefits: formValues.benefits,
+            noTotalTokens: formValues.noTotalTokens,
+            percentageTokens: formValues.percentageTokens,
+            streamingUrl: formValues.streamingUrl,
+            layers: layerVariables,
+          },
+        },
+      },
+    ];
+    // await mintNFT(NFTContract,my addres,metadataWithSupply);
   }
 
   function onChangeCover(e) {
     if (e.target.files.length === 0) return;
     const preview = URL?.createObjectURL(e.target.files[0]);
-    setFileCoverUrl(preview);
+    setCoverFile(e.target.files[0]);
+    setFileCoverUrlPreview(preview);
   }
 
   function handleChange(event) {
@@ -155,7 +176,7 @@ export default function CreateItem() {
     setValidForm(
       !errorTokens &&
         !errorPercentage &&
-        fileCoverUrl &&
+        fileCoverUrlPreview &&
         formValues.noTotalTokens &&
         formValues.percentageTokens &&
         formValues.NFTName &&
@@ -164,7 +185,7 @@ export default function CreateItem() {
         formValues.benefits &&
         benefitsArray.length >= 3
     );
-  }, [errorPercentage, errorTokens, fileCoverUrl, formValues]);
+  }, [errorPercentage, errorTokens, fileCoverUrlPreview, formValues]);
 
   return (
     <div className='w-3/4 mx-auto my-10'>
@@ -174,9 +195,9 @@ export default function CreateItem() {
             <span className=''>NFT Cover</span>
             <Form.Group controlId='nftCover' className='mb-3'>
               <Form.Label>
-                {fileCoverUrl && (
+                {fileCoverUrlPreview && (
                   <img
-                    src={fileCoverUrl}
+                    src={fileCoverUrlPreview}
                     className='cursor-pointer'
                     title='Edit NFT cover'
                     alt={`file-cover`}
@@ -188,7 +209,7 @@ export default function CreateItem() {
                 type='file'
                 size='sm'
                 onChange={onChangeCover}
-                hidden={fileCoverUrl}
+                hidden={fileCoverUrlPreview}
                 aria-describedby={`ErrorCoverFile`}
               />
               {errorCoverFile && (
