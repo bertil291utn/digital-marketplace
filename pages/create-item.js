@@ -100,6 +100,9 @@ export default function CreateItem() {
     console.log('mintear my nft');
     console.log('formValues', formValues);
     console.log('layerVariables', layerVariables);
+    //TODO:test with nft colleciton instead get edition ,
+    // this implies remove supply and mint with for loop
+    //https://thirdweb.com/dashboard/mumbai/nft-collection/0xf7c173Bc3c09bF467d897273D57081a3536718c5?tabIndex=2
     const metadataWithSupply = {
       supply: +formValues.noTotalTokens,
       metadata: {
