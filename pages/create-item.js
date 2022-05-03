@@ -6,7 +6,7 @@ import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
 import { layerModel, layerTypeModel } from '../providers/layerModel';
 import { Button } from 'react-bootstrap';
-import { mintNFT } from '../utils/nft-contract';
+import { mintBatchNFT, mintNFT } from '../utils/nft-contract';
 import { useAddress } from '@thirdweb-dev/react';
 
 export default function CreateItem() {
@@ -103,9 +103,25 @@ export default function CreateItem() {
     //TODO:test with nft colleciton instead get edition ,
     // this implies remove supply and mint with for loop
     //https://thirdweb.com/dashboard/mumbai/nft-collection/0xf7c173Bc3c09bF467d897273D57081a3536718c5?tabIndex=2
-    const metadataWithSupply = {
-      supply: +formValues.noTotalTokens,
-      metadata: {
+    // const metadataWithSupply = {
+    //   supply: +formValues.noTotalTokens,
+    //   metadata: {
+    //     name: formValues.NFTName,
+    //     description: formValues.description,
+    //     image: coverFile,
+    //     external_url: 'https://www.distrofank.xyz/token/number',
+    //     additional_info: {
+    //       benefits: formValues.benefits,
+    //       noTotalTokens: formValues.noTotalTokens,
+    //       percentageTokens: formValues.percentageTokens,
+    //       streamingUrl: formValues.streamingUrl,
+    //       layers: layerVariables,
+    //     },
+    //   },
+    // };
+    const metadatas = [];
+    for (let index = 0; index < +formValues.noTotalTokens; index++) {
+      metadatas.push({
         name: formValues.NFTName,
         description: formValues.description,
         image: coverFile,
@@ -117,12 +133,11 @@ export default function CreateItem() {
           streamingUrl: formValues.streamingUrl,
           layers: layerVariables,
         },
-      },
-    };
+      });
+    }
 
-    const tx = address && (await mintNFT(address, metadataWithSupply));
-    console.log('tx',tx)
-    console.log('tx data',await tx.data())
+    const tx = metadatas.length > 0 && (await mintBatchNFT(metadatas));
+    console.log('tx data', await tx[0].data());
   }
 
   function onChangeCover(e) {
