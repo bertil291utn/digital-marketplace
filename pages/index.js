@@ -1,5 +1,5 @@
 /* pages/index.js */
-import {  ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
@@ -15,7 +15,7 @@ export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState('not-loaded');
   useEffect(() => {
-    loadNFTs();
+    // loadNFTs();
   }, []);
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
@@ -24,7 +24,7 @@ export default function Home() {
     });
 
     const nfts = await contract.getAll();
-console.log(nfts);
+    console.log(nfts);
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider(
       'https://matic-mumbai.chainstacklabs.com'
@@ -85,7 +85,7 @@ console.log(nfts);
     return <h1 className='px-20 py-10 text-3xl'>No items in marketplace</h1>;
   return (
     <div className='flex justify-center'>
-      <div className='px-4' style={{ maxWidth: '1600px' }}>
+      {/* <div className='px-4' style={{ maxWidth: '1600px' }}>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4'>
           {nfts.map((nft, i) => (
             <div key={i} className='border shadow rounded-xl overflow-hidden'>
@@ -120,7 +120,14 @@ console.log(nfts);
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
+      <iframe
+        src='https://gateway.ipfscdn.io/ipfs/QmWadjbCefyTnh8DMNBJyvZiVhXmFvrFbKzYqzY7WAGEHf/drop.html?contract=0x0a34700c90F55E15841977adbe1278AB566F312a&chainId=80001'
+        width='600px'
+        height='600px'
+        style={{ maxWidth: '100%' }}
+        frameBorder='0'
+      ></iframe>
     </div>
   );
 }

@@ -1,30 +1,35 @@
 import { sdk } from './connection/third-web-conn';
+export const contract = async (funcContractName) => {
+  const _sdk = await sdk();
+  return _sdk[funcContractName](process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS);
+};
 
-export const mintNFT = async (toAddress, metadataWithSupply) => {
+export const mintNFT = (toAddress, metadataWithSupply, contract) => {
   try {
-    const _sdk = await sdk();
-    //TODO: test with nft collection address and getNFTCollection instead edition
-    //or even try as drop with claim at the same time or claim later https://docs.thirdweb.com/typescript/sdk.editiondrop#methods
-    //for this last one, add a release drop module on 3rdweb dashboard
-    const contract = _sdk.getEdition(
-      process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS
-    );
-    const tx = await contract.mintTo(toAddress, metadataWithSupply);
-    return tx;
+    return contract.mintTo(toAddress, metadataWithSupply);
   } catch (error) {
-    console.log(error.message);
+    console.log(`MintTo error ${error.message}`);
   }
 };
 
-export const mintBatchNFT = async (metadatas) => {
+export const mintBatchNFT = (metadatas, contract) => {
   try {
-    const _sdk = await sdk();
-    const contract = _sdk.getNFTDrop(
-      process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS
-    );
-    const tx = await contract.createBatch(metadatas);
-    return tx;
+    return contract.createBatch(metadatas);
   } catch (error) {
-    console.log(error.message);
+    console.log(`Mint nft batch error ${error.message}`);
+  }
+};
+
+export const setClaimConditions = (
+  claimConditions,
+  contract,
+  tokenId = false
+) => {
+  try {
+    return tokenId
+      ? contract.claimConditions.set(tokenId, claimConditions)
+      : contract.claimConditions.set(claimConditions);
+  } catch (error) {
+    console.log(`Set claims error ${error.message}`);
   }
 };

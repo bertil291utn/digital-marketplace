@@ -109,14 +109,13 @@ const Benefits = ({ type, benefitsArray }) => {
 
           <FloatingLabel
             controlId={`precioToken-${type}`}
-            label='Precio en USD por token ex. $99'
+            label='Precio en MATIC por token ex. 0.999'
             className='mb-3'
           >
             <Form.Control
-              type='number'
+              type='string'
               onChange={handleChange}
               name={layerTypeModel.PRICE}
-              min='1'
               aria-describedby={`precioToken-${type}-numBlock`}
               className={zeroError ? 'error-input-border' : undefined}
             />

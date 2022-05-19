@@ -6,6 +6,6 @@ export const layerTypeModel = {
 
 export const layerModel = {
   GENERAL: 'publico general',
-  COLLECTOR: 'collecionista',
-  PREMIUM: 'fan base premium',
+  // COLLECTOR: 'collecionista',
+  // PREMIUM: 'fan base premium',
 };

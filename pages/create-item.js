@@ -6,12 +6,18 @@ import Benefits from '../components/create-item/Benefits.component';
 import { useGlobalContext } from '../providers/GlobalProviders';
 import { layerModel, layerTypeModel } from '../providers/layerModel';
 import { Button } from 'react-bootstrap';
-import { mintBatchNFT, mintNFT } from '../utils/nft-contract';
+import {
+  contract,
+  mintBatchNFT,
+  mintNFT,
+  setClaimConditions,
+} from '../utils/nft-contract';
 import { useAddress } from '@thirdweb-dev/react';
+import { useRouter } from 'next/router';
 
 export default function CreateItem() {
   const address = useAddress();
-
+  const router = useRouter();
   const {
     updateTotalTokens,
     updateTotalRoyalties,
@@ -100,6 +106,7 @@ export default function CreateItem() {
     console.log('mintear my nft');
     console.log('formValues', formValues);
     console.log('layerVariables', layerVariables);
+    // return;
     //TODO:test with nft colleciton instead get edition ,
     // this implies remove supply and mint with for loop
     //https://thirdweb.com/dashboard/mumbai/nft-collection/0xf7c173Bc3c09bF467d897273D57081a3536718c5?tabIndex=2
@@ -118,7 +125,33 @@ export default function CreateItem() {
     //       layers: layerVariables,
     //     },
     //   },
-    // };
+    // };\
+
+
+    //todo: try minting with this supplies
+    //const metadataWithSupply = [{
+//   supply: 50, // The number of this NFT you want to mint
+//   metadata: {
+//     name: "Cool NFT #1",
+//     description: "This is a cool NFT",
+//     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+//   },
+// }, {
+//   supply: 100,
+//   metadata: {
+//     name: "Cool NFT #2",
+//     description: "This is a cool NFT",
+//     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+//   },
+// }];
+
+// const tx = await contract.mintBatchTo(toAddress, metadataWithSupply);
+//todo: mint with edtions drops n of one with supplies
+//set claim one price
+//claim just one 
+//later: set claim golden one price, vip other price, and so
+//later: claim by each layer
+    const contractResponse = await contract('getNFTDrop');
     const metadatas = [];
     for (let index = 0; index < +formValues.noTotalTokens; index++) {
       metadatas.push({
@@ -136,8 +169,19 @@ export default function CreateItem() {
       });
     }
 
-    const tx = metadatas.length > 0 && (await mintBatchNFT(metadatas));
-    console.log('tx data', await tx[0].data());
+    let txResult = metadatas.length > 0 && (await mintBatchNFT(metadatas,contractResponse));
+    if (!txResult) return;
+    const claimConditions = [
+      {
+        startTime: new Date(), // start the presale now
+        // maxQuantity: 3,
+        price: Object.values(layerVariables)[0].price, // presale price
+      },
+    ];
+    const tx=await setClaimConditions(claimConditions,contractResponse);
+    console.log('tx',tx)
+    if(!tx) return;
+    router.push('/');
   }
 
   function onChangeCover(e) {
@@ -371,12 +415,14 @@ export default function CreateItem() {
           {validForm && (
             <div className='mt-10'>
               <p className='my-3'>
-                La distribuci&oacute;n de NFTs se va a dar en 3 layers
+                {`La distribucion de NFTs se va a dar en ${
+                  Object.values(layerModel).length
+                } layers`}
               </p>
 
               <div className='my-4'>
                 <form onSubmit={handleSubmit}>
-                  <ul className='grid grid-cols-3 gap-4 mt-10'>
+                  <ul className='grid grid-cols-2 gap-4 mt-10'>
                     {Object.keys(layerModel).map((_key) => (
                       <li
                         className='border border-gray-300 rounded-lg p-4 pb-0 shadow-md'
