@@ -23,7 +23,7 @@ export default function Home() {
     });
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider(
-      'https://matic-mumbai.chainstacklabs.com'
+      'https://matic-mumbai.chainstacklabs.com' 
     );
     const marketContract = new ethers.Contract(
       nftmarketaddress,
