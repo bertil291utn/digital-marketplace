@@ -1,25 +1,32 @@
 /* hardhat.config.js */
-require("@nomiclabs/hardhat-waffle")
+require('@nomiclabs/hardhat-waffle');
+require("@nomiclabs/hardhat-etherscan");
 require('dotenv').config();
 
 module.exports = {
-  defaultNetwork: "mumbai",
+  defaultNetwork: 'mumbai',
   networks: {
     hardhat: {
-      chainId: 31337
+      chainId: 31337,
     },
     mumbai: {
-      url: 'https://rpc-mumbai.maticvigil.com/',
-      accounts: [process.env.PRIVATE_WALLET_KEY]
-    }
+      url: process.env.NEXT_PUBLIC_ALCHEMY_NODE_URL,
+      accounts: { mnemonic: process.env.NEXT_PUBLIC_MNEMONIC },
+    },
+  },
+  namedAccounts: {
+    deployer: 0,
+  },
+  etherscan: {
+    apiKey: { mumbai: process.env.NEXT_PUBLIC_POLYGON_SCAN_URL },
   },
   solidity: {
-    version: "0.8.4",
+    version: '0.8.4',
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200
-      }
-    }
-  }
-}
+        runs: 200,
+      },
+    },
+  },
+};

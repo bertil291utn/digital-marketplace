@@ -19,7 +19,7 @@ export default function Home() {
   async function loadNFTs() {
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_ALCHEMY_API_URL
+      process.env.NEXT_PUBLIC_ALCHEMY_NODE_URL
     );
     const marketContract = new ethers.Contract(
       MARKETPLACE,
