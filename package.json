@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "hardhat": "npx hardhat",
+    "test": "hardhat test",
+    "compile": "hardhat compile",
     "start": "next dev",
     "build": "next build",
     "dev:start": "next start",
