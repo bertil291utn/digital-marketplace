@@ -5,7 +5,7 @@ import axios from 'axios';
 import Web3Modal from 'web3modal';
 import Image from 'next/image';
 
-import { nftaddress, nftmarketaddress } from '../config';
+import { NFT_TOKEN, MARKETPLACE } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
@@ -17,20 +17,16 @@ export default function Home() {
     loadNFTs();
   }, []);
   async function loadNFTs() {
-    const web3Modal = new Web3Modal({
-      network: 'mainnet',
-      cacheProvider: true,
-    });
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider(
-      'https://matic-mumbai.chainstacklabs.com' 
+      process.env.NEXT_PUBLIC_ALCHEMY_API_URL
     );
     const marketContract = new ethers.Contract(
-      nftmarketaddress,
+      MARKETPLACE,
       Market.abi,
       provider
     );
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const tokenContract = new ethers.Contract(NFT_TOKEN, NFT.abi, provider);
     const data = await marketContract.fetchMarketItems();
 
     /*
@@ -63,11 +59,11 @@ export default function Home() {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    const contract = new ethers.Contract(MARKETPLACE, Market.abi, signer);
 
     /* user will be prompted to pay the asking proces to complete the transaction */
     const transaction = await contract.createMarketSale(
-      nftaddress,
+      NFT_TOKEN,
       nft.tokenId,
       {
         value: ethers.utils.parseUnits(nft.price.toString(), 'ether'),
@@ -86,7 +82,7 @@ export default function Home() {
           {nfts.map((nft, i) => (
             <div key={i} className='border shadow rounded-xl overflow-hidden'>
               <Image
-                src={nft.image} 
+                src={nft.image}
                 alt={'nft item ' + i}
                 width={500}
                 height={500}

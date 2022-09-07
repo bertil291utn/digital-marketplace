@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
-import { nftaddress, nftmarketaddress } from '../config';
+import { NFT_TOKEN, MARKETPLACE } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
@@ -60,7 +60,7 @@ export default function CreateItem() {
     const signer = provider.getSigner();
 
     /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    let contract = new ethers.Contract(NFT_TOKEN, NFT.abi, signer);
     let transaction = await contract.createToken(url);
     let tx = await transaction.wait();
     let event = tx.events[0];
@@ -69,11 +69,11 @@ export default function CreateItem() {
     const price = ethers.utils.parseUnits(formInput.price, 'ether');
 
     /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    contract = new ethers.Contract(MARKETPLACE, Market.abi, signer);
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
+    transaction = await contract.createMarketItem(NFT_TOKEN, tokenId, price, {
       value: listingPrice,
     });
     await transaction.wait();
