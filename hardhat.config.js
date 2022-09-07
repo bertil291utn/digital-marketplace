@@ -21,7 +21,7 @@ module.exports = {
     apiKey: { mumbai: process.env.NEXT_PUBLIC_POLYGON_SCAN_URL },
   },
   solidity: {
-    version: '0.8.4',
+    version: '0.8.16',
     settings: {
       optimizer: {
         enabled: true,
