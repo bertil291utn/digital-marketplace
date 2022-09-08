@@ -5,3 +5,4 @@ export const INFURA_PROJECT_ID = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
 export const INFURA_SECRET_API = process.env.NEXT_PUBLIC_INFURA_SECRET_API;
 export const PINATA_API_SECRET = process.env.NEXT_PUBLIC_PINATA_API_SECRET;
 export const PINATA_API_KEY = process.env.NEXT_PUBLIC_PINATA_API_KEY;
+export const PINATA_JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
