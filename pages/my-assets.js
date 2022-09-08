@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { MARKETPLACE, NFT_TOKEN } from '../config';
 
-import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
+import MARKETPLACE_ABI from '../contractsABI/NFTMarket.json';
 import NFT_ABI from '../contractsABI/NFT.json';
 
 export default function MyAssets() {
@@ -27,10 +27,10 @@ export default function MyAssets() {
 
     const marketContract = new ethers.Contract(
       MARKETPLACE,
-      Market.abi,
+      MARKETPLACE_ABI,
       signer
     );
-    const tokenContract = new ethers.Contract(NFT_TOKEN, NFT.abi, provider);
+    const tokenContract = new ethers.Contract(NFT_TOKEN, NFT_ABI, provider);
     const data = await marketContract.fetchMyNFTs();
 
     const items = await Promise.all(
