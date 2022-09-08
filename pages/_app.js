@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }) {
                 linkState.sell ? 'active-link' : ''
               }`}
             >
-              Sell Digital Asset
+              Create Digital Asset
             </a>
           </Link>
           <Link href='/my-assets'>
