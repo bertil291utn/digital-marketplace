@@ -8,7 +8,6 @@ import Image from 'next/image';
 import { NFT_TOKEN, MARKETPLACE } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
-import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
@@ -21,13 +20,8 @@ export default function Home() {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.NEXT_PUBLIC_ALCHEMY_NODE_URL
     );
-    const marketContract = new ethers.Contract(
-      MARKETPLACE,
-      Market.abi,
-      provider
-    );
     const tokenContract = new ethers.Contract(NFT_TOKEN, NFT.abi, provider);
-    const data = await marketContract.fetchMarketItems();
+    const data = await tokenContract.getAllRegisters();
 
     /*
      *  map over items returned from smart contract and format
@@ -36,16 +30,13 @@ export default function Home() {
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
+        const { data } = await axios.get(tokenUri);
+        const metaData = JSON.parse(data);
         let item = {
-          price,
           tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
+          image: metaData.image,
+          name: metaData.name,
+          description: metaData.description,
         };
         return item;
       })
@@ -100,14 +91,15 @@ export default function Home() {
               </div>
               <div className='p-4 bg-black'>
                 <p className='text-2xl mb-4 font-bold text-white'>
-                  {nft.price} ETH
+                  {/* {nft.price} ETH */}
+                  Type: IP song
                 </p>
-                <button
+                {/* <button
                   className='w-full bg-pink-500 text-white font-bold py-2 px-12 rounded'
                   onClick={() => buyNft(nft)}
                 >
                   Buy
-                </button>
+                </button> */}
               </div>
             </div>
           ))}
