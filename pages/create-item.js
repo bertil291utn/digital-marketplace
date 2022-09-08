@@ -5,16 +5,27 @@ import { create as ipfsHttpClient } from 'ipfs-http-client';
 import { useRouter } from 'next/router';
 import Web3Modal from 'web3modal';
 import Image from 'next/image';
+import axios from 'axios';
+import {
+  NFT_TOKEN,
+  MARKETPLACE,
+  IPFS_DEDICATED_NODE,
+  INFURA_PROJECT_ID,
+  INFURA_SECRET_API,
+  PINATA_API_SECRET,
+  PINATA_API_KEY,
+  PINATA_JWT,
+} from '../config';
+// import pinataSDK from '@pinata/sdk';
 
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
-
-import { NFT_TOKEN, MARKETPLACE } from '../config';
+// const pinata = pinataSDK(PINATA_API_KEY, PINATA_API_SECRET);
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
 
 export default function CreateItem() {
-  const [fileUrl, setFileUrl] = useState(null);
+  const [IPFS_URI, setIPFS_URI] = useState();
+
   const [formInput, updateFormInput] = useState({
     price: '',
     name: '',
@@ -23,59 +34,62 @@ export default function CreateItem() {
   const router = useRouter();
 
   async function onChange(e) {
-    const file = e.target.files[0];
-    try {
-      const added = await client.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
+    const files = e.target.files[0];
+    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+    const data = new FormData();
+    data.append('file', files);
+    axios
+      .post(url, data, {
+        headers: {
+          'Content-Type': `multipart/form-data; boundary= ${data._boundary}`,
+          pinata_api_key: PINATA_API_KEY,
+          pinata_secret_api_key: PINATA_API_SECRET,
+        },
+      })
+      .then(function (response) {
+        setIPFS_URI(response.data.IpfsHash);
+      })
+      .catch(function (error) {
+        console.log(
+          '🚀 ~ file: create-item.js ~ line 55 ~ onChange ~ error',
+          error.message
+        );
       });
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setFileUrl(url);
-    } catch (error) {
-      console.log('Error uploading file: ', error);
-    }
   }
+
   async function createMarket() {
     const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
-    const data = JSON.stringify({
-      name,
-      description,
-      image: fileUrl,
-    });
+    if (!name) return;
+
     try {
-      const added = await client.add(data);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      createSale(url);
+      createSale(name, IPFS_URI);
     } catch (error) {
       console.log('Error uploading file: ', error);
     }
   }
 
-  async function createSale(url) {
+  async function createSale(bandName, IPFS_URI) {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
     /* next, create the item */
-    let contract = new ethers.Contract(NFT_TOKEN, NFT.abi, signer);
-    let transaction = await contract.createToken(url);
+    let nftToken = new ethers.Contract(NFT_TOKEN, NFT.abi, signer);
+    let transaction = await nftToken.createToken(bandName);
     let tx = await transaction.wait();
     let event = tx.events[0];
     let value = event.args[2];
     let tokenId = value.toNumber();
-    const price = ethers.utils.parseUnits(formInput.price, 'ether');
+    // const price = ethers.utils.parseUnits(formInput.price, 'ether');
 
     /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(MARKETPLACE, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
+    // contract = new ethers.Contract(MARKETPLACE, Market.abi, signer);
+    // let listingPrice = await contract.getListingPrice();
+    // listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(NFT_TOKEN, tokenId, price, {
-      value: listingPrice,
-    });
+    transaction = await nftToken.setRecord(IPFS_URI, bandName);
     await transaction.wait();
     router.push('/');
   }
@@ -97,16 +111,22 @@ export default function CreateItem() {
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
-        <input
+        {/* <input
           placeholder='Asset Price in Eth'
           className='mt-2 border rounded p-4'
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
           }
+        /> */}
+        <input
+          type='file'
+          name='Asset'
+          className='my-4'
+          onChange={onChange}
+          // multiple
         />
-        <input type='file' name='Asset' className='my-4' onChange={onChange} />
 
-        {fileUrl && (
+        {/* {fileUrl && (
           <Image
             className='rounded mt-4'
             src={fileUrl}
@@ -115,7 +135,7 @@ export default function CreateItem() {
             width={500}
             height={500}
           />
-        )}
+        )} */}
 
         <button
           onClick={createMarket}
