@@ -5,7 +5,7 @@ import axios from 'axios';
 import Web3Modal from 'web3modal';
 import Image from 'next/image';
 
-import { NFT_TOKEN, MARKETPLACE } from '../config';
+import { NFT_TOKEN, MARKETPLACE, IPFS_DEDICATED_NODE } from '../config';
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 
@@ -31,10 +31,12 @@ export default function Home() {
       data.map(async (_, index) => {
         const tokenUri = await tokenContract.tokenURI(index + 1);
         const { data } = await axios.get(tokenUri);
+        const urlDoc = await tokenContract.getRecord(data.name);
         let item = {
           image: data.image,
           name: data.name,
           description: data.description,
+          urlDoc: `${IPFS_DEDICATED_NODE}/${urlDoc}`,
         };
         return item;
       })
@@ -83,8 +85,11 @@ export default function Home() {
                 >
                   {nft.name}
                 </p>
-                <div style={{ height: '70px', overflow: 'hidden' }}>
+                <div style={{ height: 'fitContent', overflow: 'hidden' }}>
                   <p className='text-gray-400'>{nft.description}</p>
+                  <a href={nft.urlDoc} target='_blank' rel='noreferrer'>
+                    <p>View documentation</p>
+                  </a>
                 </div>
               </div>
               <div className='p-4 bg-black'>
