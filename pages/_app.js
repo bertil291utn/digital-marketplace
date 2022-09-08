@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <div>
       <nav className='border-b p-6'>
-        <p className='text-4xl font-bold'>Punk guitars marketplace</p>
+        <p className='text-4xl font-bold'>Distro Fank IP marketplace</p>
         <div className='flex mt-4'>
           <Link href='/'>
             <a
