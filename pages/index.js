@@ -28,15 +28,13 @@ export default function Home() {
      *  them as well as fetch their token metadata
      */
     const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+      data.map(async (_, index) => {
+        const tokenUri = await tokenContract.tokenURI(index + 1);
         const { data } = await axios.get(tokenUri);
-        const metaData = JSON.parse(data);
         let item = {
-          tokenId: i.tokenId.toNumber(),
-          image: metaData.image,
-          name: metaData.name,
-          description: metaData.description,
+          image: data.image,
+          name: data.name,
+          description: data.description,
         };
         return item;
       })
