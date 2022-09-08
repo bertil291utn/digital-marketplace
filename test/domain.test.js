@@ -46,4 +46,8 @@ describe('NFTMarket', async function () {
     await tx.wait();
     expect(await _nftContract.getAllRegisters()).to.have.lengthOf(2);
   });
+
+  it('should get an empty array all registers response', async function () {
+    expect(await _nftContract.getAllRegisters()).to.have.lengthOf(0);
+  });
 });
