@@ -18,7 +18,7 @@ module.exports = {
     deployer: 0,
   },
   etherscan: {
-    apiKey: { mumbai: process.env.NEXT_PUBLIC_POLYGON_SCAN_URL },
+    apiKey: { polygonMumbai: process.env.NEXT_PUBLIC_POLYGON_SCAN_URL },
   },
   solidity: {
     version: '0.8.16',
