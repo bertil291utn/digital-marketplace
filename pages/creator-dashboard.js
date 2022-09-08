@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { MARKETPLACE, NFT_TOKEN } from '../config';
 
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
-import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
+import NFT_ABI from '../contractsABI/NFT.json';
 
 export default function CreatorDashboard() {
   const [nfts, setNfts] = useState([]);

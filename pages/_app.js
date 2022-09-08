@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }) {
               Create Digital Asset
             </a>
           </Link>
-          <Link href='/my-assets'>
+          {/* <Link href='/my-assets'>
             <a
               onClick={() => setLinkState({ myAssets: true })}
               className={`mr-6 text-pink-500 ${
@@ -46,8 +46,8 @@ function MyApp({ Component, pageProps }) {
             >
               My Digital Assets
             </a>
-          </Link>
-          <Link href='/creator-dashboard'>
+          </Link> */}
+          {/* <Link href='/creator-dashboard'>
             <a
               onClick={() => setLinkState({dashboard: true })}
               className={`mr-6 text-pink-500 ${
@@ -56,7 +56,7 @@ function MyApp({ Component, pageProps }) {
             >
               Creator Dashboard
             </a>
-          </Link>
+          </Link> */}
         </div>
       </nav>
       <Component {...pageProps} />

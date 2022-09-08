@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { NFT_TOKEN, MARKETPLACE, IPFS_DEDICATED_NODE } from '../config';
 
-import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
+import NFT_ABI from '../contractsABI/NFT.json';
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
@@ -20,7 +20,7 @@ export default function Home() {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.NEXT_PUBLIC_ALCHEMY_NODE_URL
     );
-    const tokenContract = new ethers.Contract(NFT_TOKEN, NFT.abi, provider);
+    const tokenContract = new ethers.Contract(NFT_TOKEN, NFT_ABI, provider);
     const data = await tokenContract.getAllRegisters();
 
     /*

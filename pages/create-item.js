@@ -1,27 +1,18 @@
 /* pages/create-item.js */
 import { useState } from 'react';
 import { ethers } from 'ethers';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
 import { useRouter } from 'next/router';
 import Web3Modal from 'web3modal';
 import Image from 'next/image';
 import axios from 'axios';
 import {
   NFT_TOKEN,
-  MARKETPLACE,
-  IPFS_DEDICATED_NODE,
-  INFURA_PROJECT_ID,
-  INFURA_SECRET_API,
   PINATA_API_SECRET,
   PINATA_API_KEY,
-  PINATA_JWT,
 } from '../config';
-// import pinataSDK from '@pinata/sdk';
 
-// const pinata = pinataSDK(PINATA_API_KEY, PINATA_API_SECRET);
 
-import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
-import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
+import NFT_ABI from '../contractsABI/NFT.json';
 
 export default function CreateItem() {
   const [IPFS_URI, setIPFS_URI] = useState();
@@ -76,7 +67,7 @@ export default function CreateItem() {
     const signer = provider.getSigner();
 
     /* next, create the item */
-    let nftToken = new ethers.Contract(NFT_TOKEN, NFT.abi, signer);
+    let nftToken = new ethers.Contract(NFT_TOKEN, NFT_ABI, signer);
     let transaction = await nftToken.createToken(bandName);
     let tx = await transaction.wait();
     let event = tx.events[0];
