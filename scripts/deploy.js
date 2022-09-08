@@ -1,22 +1,20 @@
+require('dotenv').config();
 
 async function main() {
-
   const [deployer] = await ethers.getSigners();
 
-  console.log(
-    "Deploying contracts with the account:",
-    deployer.address
-  );
+  console.log('Deploying contracts with the account:', deployer.address);
 
   // const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
   // const nftMarket = await NFTMarket.deploy();
   // await nftMarket.deployed();
   // console.log("nftMarket deployed to:", nftMarket.address);
 
-  const NFT = await ethers.getContractFactory("NFT");
-  const nft = await NFT.deploy(nftMarket.address);
+  const NFT = await ethers.getContractFactory('NFT');
+  // const nft = await NFT.deploy(nftMarket.address);
+  const nft = await NFT.deploy(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS);
   await nft.deployed();
-  console.log("nft deployed to:", nft.address);
+  console.log('nft deployed to:', nft.address);
 }
 
 main()
