@@ -19,6 +19,7 @@ describe('NFTMarket', async function () {
   beforeEach(async () => {
     await deployIPFixture();
   });
+  
   it('Should mint an NFT', async function () {
     let tx = await _nftContract.createToken('Dcaina');
     await tx.wait();
@@ -40,9 +41,9 @@ describe('NFTMarket', async function () {
   });
 
   it('should get all registers', async function () {
-    let tx = await _nftContract.connect(_user1).createToken('Dcaina');
+    let tx = await _nftContract.createToken('Dcaina1');
     await tx.wait();
-    tx = await _nftContract.connect(_user1).createToken('Dcaina2');
+    tx = await _nftContract.createToken('Dcaina2');
     await tx.wait();
     expect(await _nftContract.getAllRegisters()).to.have.lengthOf(2);
   });
